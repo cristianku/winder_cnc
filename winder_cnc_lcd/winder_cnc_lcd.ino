@@ -1,9 +1,11 @@
+#include <TouchScreen.h> //touch library
+
 #include <LCDWIKI_GUI.h> //Core graphics library
 #include <LCDWIKI_KBV.h> //Hardware-specific library
 
 //the definiens of 8bit mode as follow:
 //if the IC model is known or the modules is unreadable,you can use this constructed function
-LCDWIKI_KBV mylcd(ILI9486,A3,A2,A1,A0,A4); //model,cs,cd,wr,rd,reset
+LCDWIKI_KBV my_lcd(ILI9486,A3,A2,A1,A0,A4); //model,cs,cd,wr,rd,reset
 
 
 //define some colour values
@@ -16,15 +18,151 @@ LCDWIKI_KBV mylcd(ILI9486,A3,A2,A1,A0,A4); //model,cs,cd,wr,rd,reset
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
 
+#define YP A3  // must be an analog pin, use "An" notation!
+#define XM A2  // must be an analog pin, use "An" notation!
+#define YM 9   // can be a digital pin
+#define XP 8   // can be a digital pin
+
+//param calibration from kbv
+#define TS_MINX 906
+#define TS_MAXX 116
+
+#define TS_MINY 92 
+#define TS_MAXY 952
+
+#define MINPRESSURE 10
+#define MAXPRESSURE 1000
+
+
+int button_50_turns [] = {5, 30, 480/3 -5,70};
+char button_50_turns_desc []= "+50 turns";
+
+int button_200_turns [] = {5 + 480/3, 30 , 480/3*2-5  ,70, 5};
+char button_200_turns_desc []= "+200 turns";
+
+int button_350_turns [] = {5 + 480/3*2, 30 , 480/3*3-5  ,70, 5};
+char button_350_turns_desc []= "+350 turns";
+
+int button_900_turns [] = {5, 80, 480/3 -5,120};
+char button_900_turns_desc []= "+900 turns";
+
+int button_scattering_1 [] = {480/8 +90, 135, 480/8 * 2 +90,175,5 };
+char button_scattering_1_desc[]= "1";
+
+int button_scattering_2 [] = {480/8*2 +90 + 5, 135, 480/8 * 3 +90 + 5,175,5 };
+char button_scattering_2_desc[]= "2";
+
+int button_scattering_3 [] = {480/8*3 +90 + 10, 135, 480/8 * 4 +90 + 10,175,5 };
+char button_scattering_3_desc[]= "3";
+
+int button_scattering_4 [] = {480/8*4 +90 + 15, 135, 480/8 * 5 +90 + 15,175,5 };
+char button_scattering_4_desc[]= "4";
+
+// For better pressure precision, we need to know the resistance
+// between X+ and X- Use any multimeter to read it
+// For the one we're using, its 300 ohms across the X plate
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+
 int y = 0;
+
+uint16_t color_mask[] = {0xF800,0xFFE0,0x07E0,0x07FF,0x001F,0xF81F}; //color select
+
+#define COLORBOXSIZE my_lcd.Get_Display_Width()/6
+#define PENBOXSIZE my_lcd.Get_Display_Width()/4
+
+int16_t old_color, current_color,flag_colour;
+int16_t old_pen,current_pen,flag_pen;
+boolean show_flag = true;
+
+void show_string(uint8_t *str,int16_t x,int16_t y,uint8_t csize,uint16_t fc, uint16_t bc,boolean mode)
+{
+    my_lcd.Set_Text_Mode(mode);
+    my_lcd.Set_Text_Size(csize);
+    my_lcd.Set_Text_colour(fc);
+    my_lcd.Set_Text_Back_colour(bc);
+    my_lcd.Print_String(str,x,y);
+}
+
+void show_color_select_menu(void)
+{
+   uint16_t i;
+   for(i = 0;i<6;i++)
+   {
+       my_lcd.Set_Draw_color(color_mask[i]);
+       my_lcd.Fill_Rectangle(i*COLORBOXSIZE, 0, (i+1)*COLORBOXSIZE-1, COLORBOXSIZE/2-1);
+   }  
+   my_lcd.Set_Draw_color(GREEN);
+   my_lcd.Fill_Round_Rectangle((my_lcd.Get_Display_Width()-20)/3+10, COLORBOXSIZE/2+2, (my_lcd.Get_Display_Width()-20)/3*2+10,COLORBOXSIZE/2+20, 5);
+   show_string("OK",CENTER,COLORBOXSIZE/2+4,2,RED, BLACK,1);
+}
+
+//show main menu
+void show_main_menu(void)
+{
+   my_lcd.Set_Draw_color(YELLOW);
+
+  //  my_lcd.Fill_Round_Rectangle(5, 0, (my_lcd.Get_Display_Width()-20)/3+5,COLORBOXSIZE/2+20, 5);
+  //  my_lcd.Fill_Round_Rectangle((my_lcd.Get_Display_Width()-20)/3*2+15, 0, (my_lcd.Get_Display_Width()-20)/3*3+15,COLORBOXSIZE/2+20, 5);
+  //  my_lcd.Set_Draw_color(MAGENTA);
+  //  my_lcd.Fill_Round_Rectangle((my_lcd.Get_Display_Width()-20)/3+10, 0, (my_lcd.Get_Display_Width()-20)/3*2+10,COLORBOXSIZE/2+20, 5);
+  //  show_string("RUN",5+((my_lcd.Get_Display_Width()-20)/3-72)/2-1,((COLORBOXSIZE/2+20)-16)/2,2,BLUE, BLACK,1);
+  //  show_string("SPEED 300",(my_lcd.Get_Display_Width()-20)/3+10+((my_lcd.Get_Display_Width()-20)/3-60)/2-1,((COLORBOXSIZE/2+20)-16)/2,2,WHITE, BLACK,1);
+  //  show_string("SPEED 500",(my_lcd.Get_Display_Width()-20)/3*2+15+((my_lcd.Get_Display_Width()-20)/3-84)/2-1,((COLORBOXSIZE/2+20)-16)/2,2,BLUE, BLACK,1);
+  show_string("WINDER CNC",1,5,2,BLUE, BLACK,1);
+
+  my_lcd.Fill_Round_Rectangle(button_50_turns[0], button_50_turns[1], button_50_turns[2],button_50_turns[3], 5);
+  my_lcd.Fill_Round_Rectangle(button_200_turns[0], button_200_turns[1], button_200_turns[2],button_200_turns[3], 5);
+  my_lcd.Fill_Round_Rectangle(button_350_turns[0], button_350_turns[1], button_350_turns[2],button_350_turns[3], 5);
+  my_lcd.Fill_Round_Rectangle(button_900_turns[0], button_900_turns[1], button_900_turns[2],button_900_turns[3], 5);
+
+  show_string(button_50_turns_desc, button_50_turns[0] + 5,button_50_turns[1] + 10 ,2,BLACK, BLACK,1);
+
+  show_string(button_200_turns_desc, button_200_turns[0] + 5,button_200_turns[1] + 10 ,2,BLACK, BLACK,1);
+
+  show_string(button_350_turns_desc, button_350_turns[0] + 5,button_350_turns[1] + 10 ,2,BLACK, BLACK,1);
+
+  show_string(button_900_turns_desc, button_900_turns[0] + 5,button_900_turns[1] + 10 ,2,BLACK, BLACK,1);
+
+  show_string("Scattering:", 5, 150 ,2,WHITE, BLACK,1);
+
+   my_lcd.Set_Draw_color(MAGENTA);
+
+  my_lcd.Fill_Round_Rectangle(button_scattering_1[0], button_scattering_1[1], button_scattering_1[2],button_scattering_1[3], 5);
+  my_lcd.Fill_Round_Rectangle(button_scattering_2[0], button_scattering_2[1], button_scattering_2[2],button_scattering_2[3], 5);
+  my_lcd.Fill_Round_Rectangle(button_scattering_3[0], button_scattering_3[1], button_scattering_3[2],button_scattering_3[3], 5);
+  my_lcd.Fill_Round_Rectangle(button_scattering_4[0], button_scattering_4[1], button_scattering_4[2],button_scattering_4[3], 5);
+
+  show_string(button_scattering_1_desc, button_scattering_1[0] + 25,button_scattering_1[1] + 10 ,2,BLACK, BLACK,1);
+  show_string(button_scattering_2_desc, button_scattering_2[0] + 25,button_scattering_2[1] + 10 ,2,BLACK, BLACK,1);
+  show_string(button_scattering_3_desc, button_scattering_3[0] + 25,button_scattering_3[1] + 10 ,2,BLACK, BLACK,1);
+  show_string(button_scattering_4_desc, button_scattering_4[0] + 25,button_scattering_4[1] + 10 ,2,BLACK, BLACK,1);
+
+
+  // show_string("+200 turns", button_200_turns[0] + 5,button_200_turns[1] + 10 ,2,BLUE, BLACK,1);
+
+  // show_string("+200 turns",my_lcd.Get_Display_Width()/3 + 15,40,2,BLUE, BLACK,1);
+
+  // show_string("+350 turns",my_lcd.Get_Display_Width()/3*2 + 15,40,2,BLUE, BLACK,1);
+
+
+  // show_string("+900 turns",15,90,2,BLUE, BLACK,1);
+
+  // Serial.println(my_lcd.Get_Display_Width());
+  // Serial.println(my_lcd.Get_Display_Height());
+
+ }
+
 
 
 void setup() {
+  current_color = RED;
 
   // Begin the Serial at 9600 Baud
 
 // Open serial communications and wait for port to open:
-  Serial.begin(115200);
+  // Serial.begin(115200);
+  Serial.begin(9600);
+
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
@@ -34,16 +172,25 @@ void setup() {
   // Serial.flush();  //# Flush startup text in serial input
   Serial.println("G91");
 
-  mylcd.Init_LCD();
+  my_lcd.Init_LCD();
 
-  mylcd.Set_Text_Mode(0);
   
-  mylcd.Fill_Screen(BLACK);  
-  mylcd.Set_Text_Back_colour(BLACK);
-  mylcd.Set_Text_colour(WHITE);
-  mylcd.Set_Text_Size(2);
-  mylcd.Print_String("Serial communication open ", 0, 0);
+  my_lcd.Set_Rotation(3);
+  my_lcd.Set_Text_Mode(0);
+  
+  // my_lcd.Fill_Screen(BLACK);  
+  // my_lcd.Set_Text_Back_colour(BLACK);
+  // my_lcd.Set_Text_colour(WHITE);
+  my_lcd.Set_Text_Size(2);
+  // my_lcd.Print_String("Serial communication open ", 0, 0);
   y += 20     ;
+
+  my_lcd.Init_LCD();
+  // Serial.println(my_lcd.Read_ID(), HEX);
+  my_lcd.Fill_Screen(BLACK);
+  show_main_menu();
+  current_color = RED;
+  current_pen = 0;
 
 }
 
@@ -52,20 +199,29 @@ void setup() {
 
 void loop() {
 
-  Serial.println("G1 X10 F400" ); //# Send g-code block to grbl
-  mylcd.Print_String("Sending G1 X10 F400...", 0, y);
-  y += 20     ;
-  delay(3000);
+  digitalWrite(13, HIGH);
+  TSPoint p = ts.getPoint();
+  digitalWrite(13, LOW);
+  pinMode(XM, OUTPUT);
+  pinMode(YP, OUTPUT);
+  if (p.z > MINPRESSURE && p.z < MAXPRESSURE) 
+  {
+    
+  }
+    // Serial.println("G1 X10 F400" ); //# Send g-code block to grbl
+  // mylcd.Print_String("Sending G1 X10 F400...", 0, y);
+  // y += 20     ;
+  // delay(3000);
 
-  int grbl_out = Serial.read();  //# Wait for grbl response with carriage return
-  // mylcd.Print_String("Output from GRBL:      " , 0, y);
-  y += 20     ;
-  // mylcd.Print_String(char(grbl_out) , 0, 0);
+  // int grbl_out = Serial.read();  //# Wait for grbl response with carriage return
+  // // mylcd.Print_String("Output from GRBL:      " , 0, y);
+  // y += 20     ;
+  // // mylcd.Print_String(char(grbl_out) , 0, 0);
   
-  if (  y > 300){ 
-    y = 0; 
-    mylcd.Fill_Screen(BLACK);
-}
+  // if (  y > 300){ 
+  //   y = 0; 
+  //   mylcd.Fill_Screen(BLACK);
+
 
 }
 
