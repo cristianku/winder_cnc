@@ -95,6 +95,8 @@ int turns_to_wind = 100;
 
 int total_menu_elements =22;
 
+//                       x pos,           ypos ,  x pos max,      y pos max,corner radius, text size, color ( 1=GREY, 2= MAGENTA,3 = YELLOW)
+             
 int buttons [22] [7]= { {5          ,       30,   480/10   -5   ,       70,  5,  2, 1}, //0
                         {5 + 480/10 ,       30,   480/10*2 -5   ,       70,  5,  2, 1}, //1
                         {5 + 480/10*2,      30,   480/10*3 -5   ,       70,  5,  2, 1}, //2
@@ -409,6 +411,103 @@ void run_winder(int16_t turns, int16_t speed, int16_t scatter_level ){
   Serial.print(speed );
   Serial.println("" );
 
+  // String speed_str = String(speed);
+  
+  // char * grbl_out_uuint8 = new char [speed_str.length() + 1];
+  // strcpy (grbl_out_uuint8, speed_str.c_str());
+
+  // draw_button(grbl_out_uuint8, // uint8_t *desc,
+  //             buttons[21][0],   // int16_t x_from, 
+  //             buttons[21][1],   // int16_t y_from, 
+  //             buttons[21][2],   // int16_t x_to, 
+  //             buttons[21][3],   // int16_t y_to, 
+  //             buttons[21][4],   // int16_t corner_radius, 
+  //             buttons[21][5],   //int16_t text_dimension ,
+  //             buttons[21][6]    //int16_t button_color
+  //           );
+
+  // delay(1000);
+  // wait to grbl to start
+  int running = -1;
+  while ( running == -1){
+    // my_lcd.Fill_Screen(BLACK);  
+      draw_button("waiting for start", // uint8_t *desc,
+                  buttons[21][0],   // int16_t x_from, 
+                  buttons[21][1],   // int16_t y_from, 
+                  buttons[21][2],   // int16_t x_to, 
+                  buttons[21][3],   // int16_t y_to, 
+                  buttons[21][4],   // int16_t corner_radius, 
+                  buttons[21][5],   //int16_t text_dimension ,
+                  buttons[21][6]    //int16_t button_color
+                );
+    Serial.println("?");
+    String grbl_out = Serial.readString();
+    running = grbl_out.indexOf("Run");
+    // char * grbl_out_uuint8 = new char [grbl_out.length() + 1];
+    // strcpy (grbl_out_uuint8, grbl_out.c_str());
+
+    delay (1000);
+  }
+  //
+
+  draw_button("STARTED", // uint8_t *desc,
+              buttons[21][0],   // int16_t x_from, 
+              buttons[21][1],   // int16_t y_from, 
+              buttons[21][2],   // int16_t x_to, 
+              buttons[21][3],   // int16_t y_to, 
+              buttons[21][4],   // int16_t corner_radius, 
+              buttons[21][5],   //int16_t text_dimension ,
+              buttons[21][6]    //int16_t button_color
+            );
+  delay (2000);
+
+  int idle = -1;
+  Serial.println("?");
+  String grbl_out = Serial.readString();
+  delay(100);
+
+  while (idle == -1){
+    Serial.println("?");
+
+    String grbl_out = Serial.readString();
+    int mpos_index = grbl_out.indexOf("MPos") ;
+    int mpos_from = mpos_index + 5;
+    int mpos_to = grbl_out.indexOf(".",mpos_from);
+
+    idle = grbl_out.indexOf("Idle");
+
+    if (mpos_index > 1 ){
+      String grbl_out_turns = grbl_out.substring(mpos_from, mpos_to) + " completed turns";
+
+      char * grbl_out_uuint8 = new char [grbl_out_turns.length() + 1];
+      strcpy (grbl_out_uuint8, grbl_out_turns.c_str());
+
+      draw_button(grbl_out_uuint8, // uint8_t *desc,
+                  buttons[21][0],   // int16_t x_from, 
+                  buttons[21][1],   // int16_t y_from, 
+                  buttons[21][2],   // int16_t x_to, 
+                  buttons[21][3],   // int16_t y_to, 
+                  buttons[21][4],   // int16_t corner_radius, 
+                  buttons[21][5],   //int16_t text_dimension ,
+                  buttons[21][6]    //int16_t button_color
+                );
+        }
+  delay(100);
+
+  }
+
+
+  draw_button("FINISH", // uint8_t *desc,
+              buttons[21][0],   // int16_t x_from, 
+              buttons[21][1],   // int16_t y_from, 
+              buttons[21][2],   // int16_t x_to, 
+              buttons[21][3],   // int16_t y_to, 
+              buttons[21][4],   // int16_t corner_radius, 
+              buttons[21][5],   //int16_t text_dimension ,
+              buttons[21][6]    //int16_t button_color
+                  );
+
+
 
 }
 
@@ -444,7 +543,7 @@ void setup() {
   // show_string("G91 SENT", 10,200,3,WHITE, BLACK,1);
   delay(1000);
   // Serial.println("$");
-  run_winder(100,300,1);
+  run_winder(200,200,1);
 
   // delay(1000);
 
@@ -467,32 +566,48 @@ void loop() {
 // Serial.println("entering loop");
 
   // my_lcd.Fill_Screen(BLACK);  
+  // delay(300);
 
-  Serial.println("?");
 
-  String grbl_out = Serial.readString();
-  int mpos_from = grbl_out.indexOf("MPos")  + 5;
-  int mpos_to = grbl_out.indexOf(".",mpos_from);
+  // Serial.println("?");
+
+  // String grbl_out = Serial.readString();
+  // int mpos_from = grbl_out.indexOf("MPos")  + 5;
+  // int mpos_to = grbl_out.indexOf(".",mpos_from);
+
+  // int idle = 0;
+  // idle = grbl_out.indexOf("Idle");
   
-  if (grbl_out.substring(mpos_from, mpos_to) != "" ){
-    String grbl_out_turns = grbl_out.substring(mpos_from, mpos_to) + " completed turns";
 
-    char * grbl_out_uuint8 = new char [grbl_out_turns.length() + 1];
-    strcpy (grbl_out_uuint8, grbl_out_turns.c_str());
+  // char * grbl_out_uuint8 = new char [grbl_out.length() + 1];
+  // strcpy (grbl_out_uuint8, grbl_out.c_str());
+  
+  // if ( idle > 0 ){
+  //   show_string("idle trovato !! ", 1 + 20,10,2,WHITE, BLACK,1);  
+  // } else
+  // {
+  // show_string(grbl_out_uuint8, 1 + 20,10,2,WHITE, BLACK,1);
+  // }
 
 
-    // show_string(previous_string_uuint8, 100,100,3,WHITE, BLACK,1);
+  // if (grbl_out.substring(mpos_from, mpos_to) != "" ){
+  //   String grbl_out_turns = grbl_out.substring(mpos_from, mpos_to) + " completed turns";
 
-    draw_button(grbl_out_uuint8, // uint8_t *desc,
-                buttons[21][0],   // int16_t x_from, 
-                buttons[21][1],   // int16_t y_from, 
-                buttons[21][2],   // int16_t x_to, 
-                buttons[21][3],   // int16_t y_to, 
-                buttons[21][4],   // int16_t corner_radius, 
-                buttons[21][5],   //int16_t text_dimension ,
-                buttons[21][6]    //int16_t button_color
-              );
-  }
+  //   char * grbl_out_uuint8 = new char [grbl_out_turns.length() + 1];
+  //   strcpy (grbl_out_uuint8, grbl_out_turns.c_str());
+
+
+
+  //   draw_button(grbl_out_uuint8, // uint8_t *desc,
+  //               buttons[21][0],   // int16_t x_from, 
+  //               buttons[21][1],   // int16_t y_from, 
+  //               buttons[21][2],   // int16_t x_to, 
+  //               buttons[21][3],   // int16_t y_to, 
+  //               buttons[21][4],   // int16_t corner_radius, 
+  //               buttons[21][5],   //int16_t text_dimension ,
+  //               buttons[21][6]    //int16_t button_color
+  //             );
+  // }
   // delay(100);
 
 
@@ -501,15 +616,15 @@ void loop() {
 
   delay(2000);
 
-  digitalWrite(13, HIGH);
-  TSPoint p = ts.getPoint();
-  digitalWrite(13, LOW);
-  pinMode(XM, OUTPUT);
-  pinMode(YP, OUTPUT);
-  if (p.z > MINPRESSURE && p.z < MAXPRESSURE) 
-  {
+  // digitalWrite(13, HIGH);
+  // TSPoint p = ts.getPoint();
+  // digitalWrite(13, LOW);
+  // pinMode(XM, OUTPUT);
+  // pinMode(YP, OUTPUT);
+  // if (p.z > MINPRESSURE && p.z < MAXPRESSURE) 
+  // {
     
-  }
+  // }
     // Serial.println("G1 X10 F400" ); //# Send g-code block to grbl
   // mylcd.Print_String("Sending G1 X10 F400...", 0, y);
   // y += 20     ;
