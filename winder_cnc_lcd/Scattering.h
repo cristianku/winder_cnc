@@ -27,37 +27,21 @@ int buttons [4][9] = {
                          130 ,             // y from
                          480/8 * 2 +90 ,   // x to   
                          175,              // y to
-                         5,                // corner radius
-                         2,                //text size
-                         1,                // default color
-                         2,                // color when pressed 
                          1},               // value when selected
                         {480/8*2 +90 + 5, 
                          130,   
                          480/8 * 3 +90 + 5,   
                          175,  
-                         5,  
-                         2, 
-                         1, 
-                         2, 
                          2}, //scattering 2
                         {480/8*3 +90 + 10, 
                          130,  
                          480/8 * 4 +90 + 10,  
                          175,  
-                         5,  
-                         2, 
-                         1, 
-                         2, 
                          3}, //scattering 3
                         {480/8*4 +90 + 15, 
                         130,  
                         480/8 * 5 +90 + 15,  
                         175,  
-                        5,  
-                        2, 
-                        1, 
-                        2, 
                         4}, //scattering 4
                       };
 
@@ -96,7 +80,14 @@ void draw(int i, boolean selected){
     
 public:
 
+int get_selected_value (void ){
+  return buttons[selected][4];
+
+}
+
+
 void draw_all(void){
+    show_string("Scattering:", 10,145 ,2,WHITE, BLACK,1);
 
     for ( int i = 0; i < elements ; ++i ) {
       if ( i == selected  ){draw(i, true);} else {draw(i, false);}     

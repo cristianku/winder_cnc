@@ -49,9 +49,11 @@ LCDWIKI_KBV my_lcd(ILI9486,A3,A2,A1,A0,A4); //model,cs,cd,wr,rd,reset
 #include "NumPad.h"
 #include "Scattering.h"
 #include "Rpm.h"
+#include "Winder.h"
+#include "Turns.h"
+
 #include "MainMenu.h"
 
-NumPad my_numpad;
 MainMenu my_mainmenu;
 
 

@@ -105,11 +105,16 @@ void convert_point(void)
         }
 
 
+
         my_lcd.Fill_Round_Rectangle(x_from, y_from, x_to,y_to, corner_radius);
         Serial.println("Screen: draw_button");
         show_string(desc, x_from + 20,get_y_text_pos (y_to , y_from,text_dimension) ,text_dimension,BLACK, BLACK,1);
 
   }
+
+   
+
+   
 
   
 

@@ -189,7 +189,7 @@ String numeric_pad_desc[14] ={ "0", "", "1", "2", "3", "4", "5", "6", "7", "8", 
 
 
 
-String show(void){
+int show(void){
   Serial.println("numpad show ");
   for ( int i = 0; i < numeric_pad_elements ; ++i ) {
       Serial.println(i);
@@ -276,7 +276,7 @@ String show(void){
        }
 
     }
-    return numeric_pad_value;
+    return numeric_pad_value.toInt();
     // show_main_menu();
 
 }
