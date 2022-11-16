@@ -35,7 +35,7 @@
 #include <LCDWIKI_GUI.h> //Core graphics library
 #include <LCDWIKI_KBV.h> //Hardware-specific library
 
-#define TOUCH_ORIENTATION  0
+#define TOUCH_ORIENTATION  3
 #define TITLE "TouchScreen.h Calibration"
 
 //if the IC model is known or the modules is unreadable,you can use this constructed function
@@ -52,11 +52,10 @@ LCDWIKI_KBV my_lcd(ILI9486,A3,A2,A1,A0,A4); //model,cs,cd,wr,rd,reset
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
 
-#define YP A3  // must be an analog pin, use "An" notation!
+#define YP A1  // must be an analog pin, use "An" notation!
 #define XM A2  // must be an analog pin, use "An" notation!
-#define YM 9   // can be a digital pin
-#define XP 8   // can be a digital pin
-
+#define YM 7   // can be a digital pin
+#define XP 6   // can be a digital pin
 TouchScreen mytouch(XP, YP, XM, YM, 300);
 TSPoint tp;                      //Touchscreen_due branch uses Point
 
