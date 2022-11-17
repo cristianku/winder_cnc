@@ -200,7 +200,7 @@ int query_completed_turns (){
 
 
 void send_gcode( float turns_x, float movement_y , int speed){
-  Serial.print("");
+  Serial.print("G1 X");
   Serial.print(turns_x);
   Serial.print(" Y");
   Serial.print(movement_y);
@@ -304,14 +304,14 @@ void run_scattering_4 (int speed){
 int  run(int turns, int scattering, int speed){
   total_turns_sent = 0;
 
-  Serial.print ("****** RUN !!!!!");
+  // Serial.print ("****** RUN !!!!!");
   int turns_per_iteration = get_Turns_per_scatter_level(scattering);
 
   int iterations = int(turns / turns_per_iteration);
-  Serial.print("turns : "); Serial.println(turns);
-  Serial.print("turns_per_iteration : "); Serial.println(turns_per_iteration);
+  // Serial.print("turns : "); Serial.println(turns);
+  // Serial.print("turns_per_iteration : "); Serial.println(turns_per_iteration);
 
-  Serial.print("iterations : "); Serial.println(iterations);
+  // Serial.print("iterations : "); Serial.println(iterations);
   for ( int i = 0; i < iterations ; ++i ) {
 
     switch (scattering){
