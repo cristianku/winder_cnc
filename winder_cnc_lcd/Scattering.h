@@ -52,6 +52,20 @@ String desc[4] = {
                         "3",
                         "4"};
 
+    // def get_lbl_scatter_2(self, scatter_level):
+    //     turns = self.get_Turns_per_scatter_level(scatter_level)
+    //     if scatter_level == 1:
+    //       return "Level 1 - most scattered   ( min. {} turns )".format(turns)
+    //     elif scatter_level == 2:
+    //       return "Level 2 - medium scattered ( min. {} turns )".format(turns)
+    //     elif scatter_level == 3:
+    //       return "Level 3 - least scattered  ( min. {} turns )".format(turns)
+    //     elif scatter_level == 4:
+    //       return "Level 4 - Mix of High and Low scatter ( Level 1 + 3 )  ( {} turns )".format(turns)
+    //     elif scatter_level == 0:
+    //       return "Final touches: just 50 turns ( {} turns )".format(turns)
+
+
 
 void draw(int i, boolean selected){
        
