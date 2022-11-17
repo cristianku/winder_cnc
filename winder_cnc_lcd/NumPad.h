@@ -133,15 +133,15 @@ int numeric_pad_values[14] ={ -1, -1, 1, 2, 3,
 
 uint8_t which_pressed()
 {
-  Serial.println( "*** which pressed ");
-  Serial.println( "*** touch_x " + String(touch_x));
-  Serial.println( "*** touch_y " + String(touch_y));
+  // Serial.println( "*** which pressed ");
+  // Serial.println( "*** touch_x " + String(touch_x));
+  // Serial.println( "*** touch_y " + String(touch_y));
 
   for ( int i = 2; i < ArrayCount(numeric_pad) ; ++i ) {
       // Serial.println(i);
       if(numeric_pad[i][0] < touch_x && touch_x < numeric_pad[i][2] &&
         numeric_pad[i][1] < touch_y && touch_y < numeric_pad[i][3]){
-          Serial.println( "*** FOUND i " + String(i));
+          // Serial.println( "*** FOUND i " + String(i));
 
           return numeric_pad_values[i];
         }
@@ -188,12 +188,12 @@ boolean isOK(uint8_t value_selected_numpad) {
 }
 
 void updateNumericPadValue(uint8_t value_selected_numpad) {
-  Serial.println("** entering updateNumericPadValue");
-  Serial.print("** numeric_pad_value : "); 
-  Serial.println(numeric_pad_value);
+  // Serial.println("** entering updateNumericPadValue");
+  // Serial.print("** numeric_pad_value : "); 
+  // Serial.println(numeric_pad_value);
 
-  Serial.print("** value_selected_numpad : "); 
-  Serial.println(value_selected_numpad);
+  // Serial.print("** value_selected_numpad : "); 
+  // Serial.println(value_selected_numpad);
 
   if (numeric_pad_value == "0") {
     numeric_pad_value = String(value_selected_numpad);      
@@ -209,11 +209,11 @@ void updateNumericPadValue(uint8_t value_selected_numpad) {
 
 
 int show(void){
-  Serial.println("**********numpad show ");
+  // Serial.println("**********numpad show ");
   numeric_pad_value = "0";
   for ( int i = 0; i < ArrayCount(numeric_pad) ; ++i ) {
 
-      Serial.println(i);
+      // Serial.println(i);
       uint8_t color = 1;
       String value_to_show = "y";
       switch (i) 
@@ -266,8 +266,8 @@ void do_actions(){
     int selected = -1;
     uint8_t value_selected_numpad = which_pressed();
 
-    Serial.print(" --> value_selected_numpad : ");
-    Serial.println(value_selected_numpad);
+    // Serial.print(" --> value_selected_numpad : ");
+    // Serial.println(value_selected_numpad);
 
     if (isNumPadNumber(value_selected_numpad)) { 
       updateNumericPadValue(value_selected_numpad); 
