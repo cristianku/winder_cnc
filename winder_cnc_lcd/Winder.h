@@ -11,15 +11,18 @@ int total_turns_sent = 0;
 //4 white
 //5 black
 
-int color_when_selected = 3;
 
-int text_size = 2;
+int start_y_pos = 230;
+int button_height = 50;
 
-int default_color = 1;
-int corner_radius = 5;
-
-int buttons [2] [4]= { {5,                250,  160,                 300},
-                      {170,               250,  460,                 300}  
+int buttons [2] [4]= { {5,                
+                        start_y_pos,  
+                        160,
+                        start_y_pos + button_height},
+                       {170,
+                        start_y_pos,  
+                        460,
+                        start_y_pos+button_height}  
 };
 
 String desc [2] = { "Run Winder" , "0"};
@@ -38,9 +41,9 @@ void draw(void){
                   buttons[i][1],   // int16_t y_from, 
                   buttons[i][2],   // int16_t x_to, 
                   buttons[i][3],   // int16_t y_to, 
-                  corner_radius,   // int16_t corner_radius, 
-                  text_size,   //int16_t text_dimension ,
-                  color_when_selected   //int16_t button_color
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  3   //int16_t button_color
                 );
       }else {
       draw_button(desc[i], // uint8_t *desc,
@@ -48,9 +51,9 @@ void draw(void){
                   buttons[i][1],   // int16_t y_from, 
                   buttons[i][2],   // int16_t x_to, 
                   buttons[i][3],   // int16_t y_to, 
-                  corner_radius,   // int16_t corner_radius, 
-                  text_size,   //int16_t text_dimension ,
-                  default_color    //int16_t button_color
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  1    //int16_t button_color
                 );
       }     
     }
@@ -65,9 +68,9 @@ void draw(int i, boolean selected){
                   buttons[i][1],   // int16_t y_from, 
                   buttons[i][2],   // int16_t x_to, 
                   buttons[i][3],   // int16_t y_to, 
-                  corner_radius,   // int16_t corner_radius, 
-                  text_size,   //int16_t text_dimension ,
-                  color_when_selected    //int16_t button_color                
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  3    //int16_t button_color                
                   );
         }     else
         {
@@ -76,9 +79,9 @@ void draw(int i, boolean selected){
                   buttons[i][1],   // int16_t y_from, 
                   buttons[i][2],   // int16_t x_to, 
                   buttons[i][3],   // int16_t y_to, 
-                  corner_radius,   // int16_t corner_radius, 
-                  text_size,   //int16_t text_dimension ,
-                  default_color    //int16_t button_color
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  1    //int16_t button_color
          ); }
  }     
 
@@ -93,9 +96,9 @@ void draw_completed(int completed){
             buttons[1][1],   // int16_t y_from, 
             buttons[1][2],   // int16_t x_to, 
             buttons[1][3],   // int16_t y_to, 
-            corner_radius,   // int16_t corner_radius, 
-            text_size,   //int16_t text_dimension ,
-            default_color    //int16_t button_color                
+            5,   // int16_t corner_radius, 
+            2,   //int16_t text_dimension ,
+            1    //int16_t button_color                
             );
 }
 void draw_all(void){

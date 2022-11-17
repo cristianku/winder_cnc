@@ -18,13 +18,12 @@ int default_color = 1;
 int corner_radius = 5;
 
 int buttons [1] [4]= { {  200 ,  // x from
-                           80,     // y from
+                           40,     // y from
                           300,    // x to      
-                          120}    // y to
+                          40 + 40}    // y to
                   };
 
 String desc [1] = { "0" };
-
 
 
 public:
@@ -40,7 +39,7 @@ int getValue(void){
 }
 
 void draw_all(void){
-    show_string("Turns to do:", 10,95 ,2,WHITE, BLACK,1);
+    show_string("Turns to do:", 10,buttons[0][1] +15 ,2,WHITE, BLACK,1);
 
     for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
 

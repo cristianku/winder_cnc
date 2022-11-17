@@ -2,7 +2,7 @@
 class MainMenu :public Screen {
 
   private:
-    int turns_to_do_field [9] {200 ,  // x from
+    int turns_to_do_field [4] {200 ,  // x from
                             80,     // y from
                             300,    // x to      
                             120};    // y to
@@ -19,6 +19,10 @@ class MainMenu :public Screen {
   int turns_to_do = 0;
 
   show(){
+    my_lcd.Fill_Screen(background);
+
+    show_string("WINDER CNC", 10,10 ,2,WHITE, BLACK,1);
+
     my_scattering.draw_all();
     my_rpm.draw_all();
     my_winder.draw_all();
@@ -44,7 +48,6 @@ class MainMenu :public Screen {
       
       int numeric_pad_value = my_numpad.show();
       my_turns.setValue (numeric_pad_value);
-      my_lcd.Fill_Screen(background);
       show();
 
     };

@@ -1,6 +1,12 @@
 class Screen {
   // LCDWIKI_KBV myLcd ;
 
+  private:
+
+int buttons [1] [4]= {{0,0,0,0}} ;
+
+String desc [1] = {""};
+
   public:
   int touch_x;
   int touch_y;
