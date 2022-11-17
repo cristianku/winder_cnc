@@ -17,27 +17,31 @@ int selected = 0;
 
 
 int start_y_pos = 100;
-int button_height = 40;
+int start_x_pos = 190;
+
+uint8_t button_height = 40;
+int button_width = 50;
+uint8_t distance_between = 15;
 
 int buttons [4][5] = {
-                        {480/8 +90,        //x from 
+                        {start_x_pos,        //x from 
                          start_y_pos ,             // y from
-                         480/8 * 2 +90 ,   // x to   
+                         button_width * 1 +start_x_pos ,   // x to   
                          start_y_pos + button_height ,              // y to
                          1},               // value when selected
-                        {480/8*2 +90 + 5, 
+                        {button_width*1 +start_x_pos + distance_between, 
                          start_y_pos,   
-                         480/8 * 3 +90 + 5,   
+                         button_width * 2 +start_x_pos + distance_between,   
                          start_y_pos + button_height,  
                          2}, //scattering 2
-                        {480/8*3 +90 + 10, 
+                        {button_width*2 +start_x_pos + distance_between *2, 
                          start_y_pos,  
-                         480/8 * 4 +90 + 10,  
+                         button_width * 3 +start_x_pos + distance_between * 2,  
                          start_y_pos + button_height,  
                          3}, //scattering 3
-                        {480/8*4 +90 + 15, 
+                        {button_width*3 +start_x_pos + distance_between * 3, 
                         start_y_pos,  
-                        480/8 * 5 +90 + 15,  
+                        button_width * 4 +start_x_pos + distance_between * 3,  
                         start_y_pos + button_height,  
                         4}, //scattering 4
                       };
@@ -97,9 +101,13 @@ void do_actions(int x, int y){
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  
         ){
-          selected = i;
-          draw_all();
-          break;
+          if (selected == i){
+            break;
+          }else {
+            selected = i;
+            draw_all();
+            break;
+          }  
         }
 
   }

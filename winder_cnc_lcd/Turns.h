@@ -10,18 +10,17 @@ int value = 0;
 //4 white
 //5 black
 
-int color_when_selected = 3;
+int start_x_pos = 190;
 
-int text_size = 2;
+uint8_t button_height = 40;
+uint8_t button_width = 100;
 
-int default_color = 1;
-int corner_radius = 5;
 
-int buttons [1] [4]= { {  200 ,  // x from
+int buttons [1] [4]= { {  start_x_pos ,  // x from
                            40,     // y from
-                          300,    // x to      
-                          40 + 40}    // y to
-                  };
+                          start_x_pos + button_width,    // x to      
+                          40 +  button_height }    // y to
+                     };
 
 String desc [1] = { "0" };
 
@@ -41,16 +40,16 @@ int getValue(void){
 void draw_all(void){
     show_string("Turns to do:", 10,buttons[0][1] +15 ,2,WHITE, BLACK,1);
 
-    for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
+    for ( uint8_t i = 0; i < ArrayCount(buttons) ; ++i ) {
 
       draw_button(String(value), // uint8_t *desc,
                   buttons[i][0],   // int16_t x_from, 
                   buttons[i][1],   // int16_t y_from, 
                   buttons[i][2],   // int16_t x_to, 
                   buttons[i][3],   // int16_t y_to, 
-                  corner_radius,   // int16_t corner_radius, 
-                  text_size,   //int16_t text_dimension ,
-                  default_color    //int16_t button_color
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  1    //int16_t button_color
                 );
 
     }
@@ -58,7 +57,7 @@ void draw_all(void){
 }
 boolean do_actions(int x, int y){
    boolean found = false;
-   for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
+   for ( uint8_t i = 0; i < ArrayCount(buttons) ; ++i ) {
       Serial.println(i);
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  
