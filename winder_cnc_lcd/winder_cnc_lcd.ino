@@ -79,10 +79,7 @@ void setup() {
   // Screen my_screen;
   my_mainmenu.show();
 
-
 }
-
-
 
 
 void loop() {
