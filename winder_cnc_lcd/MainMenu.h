@@ -37,7 +37,8 @@ class MainMenu :public Screen {
       int turns_to_go = my_winder.query_completed_turns() 
                               - my_turns.getValue();
       // if (turns_to_go >= 50) {
-      int sent = my_winder.run(my_turns.getValue(), 
+      int sent = my_winder.run(my
+        _turns.getValue(), 
                     my_scattering.get_selected_value(),
                     my_rpm.get_selected_value());
       // my_winder.draw_completed ( my_winder.query_completed_turns());
