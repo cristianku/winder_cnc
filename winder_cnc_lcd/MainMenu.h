@@ -31,9 +31,10 @@ class MainMenu :public Screen {
       my_rpm.do_actions(touch_x, touch_y);
       if ( my_winder.do_actions(touch_x, touch_y) ) {
         
-        my_winder.run(my_turns.getValue(), 
+        int sent = my_winder.run(my_turns.getValue(), 
                       my_scattering.get_selected_value(),
                       my_rpm.get_selected_value());
+       my_winder.draw_completed(sent)               ;
 
       };
 

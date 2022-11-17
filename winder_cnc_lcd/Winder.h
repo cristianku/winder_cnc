@@ -3,8 +3,8 @@ class Winder : public Screen {
 private:
 
 int selected = -1;
-
-int elements = 1;
+int total_turns_sent = 0;
+int elements = 2;
 //1 grey
 //2 magenta
 //3 yellow
@@ -18,9 +18,11 @@ int text_size = 2;
 int default_color = 1;
 int corner_radius = 5;
 
-int buttons [1] [4]= { {5,                250,  160,                 300}};
+int buttons [2] [4]= { {5,                250,  160,                 300},
+                      {170,               250,  460,                 300}  
+};
 
-String desc [1] = { "Run Winder" };
+String desc [2] = { "Run Winder" , "0"};
 
 void draw(void){
 
@@ -78,11 +80,24 @@ void draw(int i, boolean selected){
                   text_size,   //int16_t text_dimension ,
                   default_color    //int16_t button_color
          ); }
-
  }     
-    
+
+
+
 public:
 
+void draw_completed(int completed){
+       
+        draw_button(String(completed), // uint8_t *desc,
+            buttons[1][0],   // int16_t x_from, 
+            buttons[1][1],   // int16_t y_from, 
+            buttons[1][2],   // int16_t x_to, 
+            buttons[1][3],   // int16_t y_to, 
+            corner_radius,   // int16_t corner_radius, 
+            text_size,   //int16_t text_dimension ,
+            default_color    //int16_t button_color                
+            );
+}
 void draw_all(void){
 
     for ( int i = 0; i < elements ; ++i ) {
@@ -128,19 +143,165 @@ int get_Turns_per_scatter_level(int scatter_level){
 
 }
 
+int query_completed_turns (){
+  Serial.println("?");
+  delay(10);
+  int completed_turns = 0;
+
+  String grbl_out = Serial.readString();
+  int mpos_from = grbl_out.indexOf("MPos")  + 5;
+  int mpos_to = grbl_out.indexOf(".",mpos_from);
+
+  // int idle = 0;
+  // idle = grbl_out.indexOf("Idle");
+  
+
+  // char * grbl_out_uuint8 = new char [grbl_out.length() + 1];
+  // strcpy (grbl_out_uuint8, grbl_out.c_str());
+  
+  // if ( idle > 0 ){
+  //   show_string("idle trovato !! ", 1 + 20,10,2,WHITE, BLACK,1);  
+  // } else
+  // {
+  // show_string(grbl_out_uuint8, 1 + 20,10,2,WHITE, BLACK,1);
+  // }
+
+
+  if (grbl_out.substring(mpos_from, mpos_to) != "" ){
+    completed_turns = grbl_out.substring(mpos_from, mpos_to).toInt()   ;
+  }  
+
+
+  return completed_turns;
+
+  //   char * grbl_out_uuint8 = new char [grbl_out_turns.length() + 1];
+  //   strcpy (grbl_out_uuint8, grbl_out_turns.c_str());
+
+
+
+  //   draw_button(grbl_out_uuint8, // uint8_t *desc,
+  //               buttons[21][0],   // int16_t x_from, 
+  //               buttons[21][1],   // int16_t y_from, 
+  //               buttons[21][2],   // int16_t x_to, 
+  //               buttons[21][3],   // int16_t y_to, 
+  //               buttons[21][4],   // int16_t corner_radius, 
+  //               buttons[21][5],   //int16_t text_dimension ,
+  //               buttons[21][6]    //int16_t button_color
+  //             );
+  // }
+  // delay(100);
+
+
+
+}
+
+
 
 void send_gcode( float turns_x, float movement_y , int speed){
-  Serial.print("G1 X");
+  Serial.print("");
   Serial.print(turns_x);
   Serial.print(" Y");
   Serial.print(movement_y);
   Serial.print(" F" );
   Serial.print(speed );
   Serial.println("" );
-  delay(1000)
-;
+  delay(100);
+
+  draw_completed ( query_completed_turns());
+
+  total_turns_sent += turns_x;
+
 }
-void run(int turns, int scattering, int speed){
+
+void run_scattering_1 (int speed){
+
+  send_gcode(30, 0.9, speed);
+  send_gcode(30, -0.9, speed);
+
+  send_gcode(15, 0.9 ,speed);
+  send_gcode(15, -0.9,speed);
+
+  send_gcode(5, 0.9,speed);
+  send_gcode(5, -0.9,speed);
+
+}
+
+void run_scattering_2 (int speed){
+  send_gcode(50, 0.9,speed);
+  send_gcode(50, -0.9,speed);
+
+  send_gcode(30, 0.9,speed);
+  send_gcode(30, -0.9,speed);
+
+  send_gcode(20, 0.9,speed);
+  send_gcode(20, -0.9,speed);
+}
+
+void run_scattering_3 (int speed){
+  send_gcode(100, 0.9, speed);
+  send_gcode(100, -0.9, speed);
+
+  send_gcode(50, 0.9, speed);
+  send_gcode(50, -0.9, speed);
+
+  send_gcode(25, 0.9, speed);
+  send_gcode(25, -0.9, speed);
+
+
+}
+
+void run_scattering_4 (int speed){
+    // # scatter level 3 - 350 turns
+
+    send_gcode(100, 0.9, speed);
+    send_gcode(100, -0.9, speed);
+
+    send_gcode(50, 0.9, speed);
+    send_gcode(50, -0.9, speed);
+
+    send_gcode(25,0.9, speed);
+    send_gcode(25,-0.9, speed);
+
+    // # scatter level 1 - 100 turns repeated 2 times
+    // # first repeat
+    send_gcode(30, 0.9, speed);
+    send_gcode(30, -0.9, speed);
+
+    send_gcode(15, 0.9, speed);
+    send_gcode(15, -0.9, speed);
+
+    send_gcode(5, 0.9, speed);
+    send_gcode(5, -0.9, speed);
+
+    // # second repeat
+    send_gcode(30, 0.9, speed);
+    send_gcode(30, -0.9, speed);
+
+    send_gcode(15, 0.9, speed);
+    send_gcode(15, -0.9, speed);
+
+    send_gcode(5, 0.9, speed);
+    send_gcode(5, -0.9, speed);
+
+    // #scatter level 3 - 350 turns
+
+    send_gcode(100, 0.9, speed);
+    send_gcode(100, -0.9, speed);
+
+    send_gcode(50, 0.9, speed);
+    send_gcode(50, -0.9, speed);
+
+    send_gcode(25, 0.9 , speed);
+    send_gcode(25, -0.9, speed);
+
+
+
+}
+
+
+int  run(int turns, int scattering, int speed){
+  total_turns_sent = 0;
+
   Serial.print ("****** RUN !!!!!");
   int turns_per_iteration = get_Turns_per_scatter_level(scattering);
 
@@ -149,38 +310,34 @@ void run(int turns, int scattering, int speed){
   Serial.print("turns_per_iteration : "); Serial.println(turns_per_iteration);
 
   Serial.print("iterations : "); Serial.println(iterations);
-  switch (scattering){
-    case 1:
-       for ( int i = 0; i < iterations ; ++i ) {
-         send_gcode(30, 0.9, speed);
-         send_gcode(30, -0.9, speed);
+  for ( int i = 0; i < iterations ; ++i ) {
 
-         send_gcode(15, 0.9 ,speed);
-         send_gcode(15, -0.9,speed);
-
-         send_gcode(5, 0.9,speed);
-         send_gcode(5, -0.9,speed);
-       }
-
-  delay(100);
-
+    switch (scattering){
+      case 1:
+          run_scattering_1(speed);
+          break;
+      case 2:
+          run_scattering_2(speed);
+          break;
+      case 3:
+          run_scattering_3(speed);
+          break;
+      case 4:
+          run_scattering_4(speed);
+          break;                    
+    }
+        
   }
 
-  delay(500);
-
+  return total_turns_sent;
 }
-
-
 
 
 };
 
-
-
-
 // void run_winder(int16_t turns, int16_t speed, int16_t scatter_level ){
 
-//   Serial.print("G1 X");
+//   Serial.print(");
 //   Serial.print(turns);
 //   Serial.print(" F" );
 //   Serial.print(speed );
