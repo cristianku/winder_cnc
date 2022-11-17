@@ -4,7 +4,7 @@ private:
 
 int selected = -1;
 int total_turns_sent = 0;
-int elements = 2;
+
 //1 grey
 //2 magenta
 //3 yellow
@@ -26,7 +26,7 @@ String desc [2] = { "Run Winder" , "0"};
 
 void draw(void){
 
-    for ( int i = 0; i < elements ; ++i ) {
+    for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
 
       // my_lcd.Fill_Round_Rectangle(buttons[i][0], buttons[i][1], buttons[i][2],buttons[i][3], buttons[i][4]);
     
@@ -88,7 +88,7 @@ public:
 
 void draw_completed(int completed){
        
-        draw_button(String(completed), // uint8_t *desc,
+        draw_button(String(completed) + " completed", // uint8_t *desc,
             buttons[1][0],   // int16_t x_from, 
             buttons[1][1],   // int16_t y_from, 
             buttons[1][2],   // int16_t x_to, 
@@ -100,14 +100,14 @@ void draw_completed(int completed){
 }
 void draw_all(void){
 
-    for ( int i = 0; i < elements ; ++i ) {
+    for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
       if ( i == selected  ){draw(i, true);} else {draw(i, false);}     
     }
 }
 
 boolean do_actions(int x, int y){
    boolean found = false;
-   for ( int i = 0; i < elements ; ++i ) {
+   for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
       Serial.println(i);
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  

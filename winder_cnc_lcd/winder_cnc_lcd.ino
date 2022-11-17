@@ -9,6 +9,7 @@
 // #define XM A2  // must be an analog pin, use "An" notation!
 // #define YM 7   // can be a digital pin
 // #define XP A1   // can be a digital pin
+#define ArrayCount(array) (sizeof array / sizeof array[0])
 
 #define YP A1  // must be an analog pin, use "An" notation!
 #define XM A2  // must be an analog pin, use "An" notation!
@@ -151,99 +152,6 @@ int scattering = 1;
 int touch_x = 0;
 int touch_y = 0;
 String numeric_pad_value;
-
-// #include "touch.h"
-// #include "numpad.h"
-
-// #include "mainmenu.h"
-
-
-
-
-// int turns_to_wind_field [9] {200 ,  // x from
-//                          80,     // y from
-//                          300,    // x to      
-//                          120,    // y to
-//                          1,      // corner radius
-//                          2,      // text size 
-//                          4,      // default color
-//                          4,      // color when pressed
-//                          -1      // value when selected 
-//                          };
-
-
-
-
-// int total_menu_elements =6;
-
-// //                       x pos,           ypos ,  x pos max,      y pos max,corner radius, text size, color ( 1=GREY, 2= MAGENTA,3 = YELLOW), actual color, color when pressed
-             
-// int buttons [6] [9]= { 
-
-
-//                         {5          ,      180,   480/4   -5   ,       220,  5,  2, 3, 3, 3}, // speed 
-//                         {5 + 480/4 ,       180,   480/4*2 -5   ,       220,  5,  2, 1, 1, 3}, // speed
-//                         {5 + 480/4*2,      180,   480/4*3 -5   ,       220,  5,  2, 1, 1, 3}, // speed
-//                         {5 + 480/4*3,      180,   480/4*4 -5   ,       220,  5,  2, 1, 1, 3}, // speed
-
-//                         {5,                250,  160,                 300,  5,  2, 1, 1, 2}, //"Run Winder"
-//                         {170,              250,  460,                 300,  5,  2, 1, 1, 2}, //"5200 completed turns"
-//                       } ;
-
-// char buttons_desc[][6] = { 
-
-//                         "300 rpm",
-//                         "450 rpm",
-//                         "500 rpm",
-//                         "600 rpm",
-
-//                         "Run Winder",
-//                         "0 completed"
-// };
-
-
-////// fine bottoni
-
-
-
-//char button_50_turns_desc []= "+50 turns";
-
-// int button_50_turns [] =  {5, 30, 480/3 -5,70,2};
-// char button_50_turns_desc []= "+50 turns";
-
-// int button_200_turns [] = {5 + 480/3, 30 , 480/3*2-5  ,70, 5,2};
-// char button_200_turns_desc []= "+200 turns";
-
-// int button_350_turns [] = {5 + 480/3*2, 30 , 480/3*3-5  ,70, 5,2};
-// char button_350_turns_desc []= "+350 turns";
-
-// int button_900_turns [] = {5, 80, 480/3 -5,120,2};
-// char button_900_turns_desc []= "+900 turns";
-
-// int button_zero_turns [] = {5480/3, 80, 480/3*2 -5,120,2};
-// char button_zero_turns_desc []= "ZERO";
-
-
-// int button_scattering_1 [] = {480/8 +90, 130, 480/8 * 2 +90,175,5 ,2};
-// char button_scattering_1_desc[]= "1";
-
-// int button_scattering_2 [] = {480/8*2 +90 + 5, 130, 480/8 * 3 +90 + 5,175,5 ,2};
-// char button_scattering_2_desc[]= "2";
-
-// int button_scattering_3 [] = {480/8*3 +90 + 10, 130, 480/8 * 4 +90 + 10,175,5,2 };
-// char button_scattering_3_desc[]= "3";
-
-// int button_scattering_4 [] = {480/8*4 +90 + 15, 130, 480/8 * 5 +90 + 15,175,5,2 };
-// char button_scattering_4_desc[]= "4";
-
-// int button_run_winder []={5, 250, 160,300,5, 2};
-// char button_run_winder_desc[]= "Run Winder";
-
-// int text_completed_turns [] = {170, 250, 460,300,5,2};
-// char text_completed_turns_desc []= "5200 completed turns";
-
-// int text_additional_turns [] =  {170, 220, 480/3*2 -5,240,5,2};
-// char text_additional_turns_desc []= "+50 turns";
 
 
 int y = 0;

@@ -4,7 +4,6 @@ private:
 
 int value = 0;
 
-int elements = 1;
 //1 grey
 //2 magenta
 //3 yellow
@@ -41,9 +40,9 @@ int getValue(void){
 }
 
 void draw_all(void){
-    show_string("Turns:", 10,95 ,2,WHITE, BLACK,1);
+    show_string("Turns to do:", 10,95 ,2,WHITE, BLACK,1);
 
-    for ( int i = 0; i < elements ; ++i ) {
+    for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
 
       draw_button(String(value), // uint8_t *desc,
                   buttons[i][0],   // int16_t x_from, 
@@ -60,7 +59,7 @@ void draw_all(void){
 }
 boolean do_actions(int x, int y){
    boolean found = false;
-   for ( int i = 0; i < elements ; ++i ) {
+   for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
       Serial.println(i);
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  

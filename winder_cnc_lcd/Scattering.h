@@ -10,15 +10,13 @@ class Scattering : public Screen {
         
 private:
 
-int elements = 4;
-
 int selected = 0;
 
-int color_when_selected = 3;
+// int color_when_selected = 3;
 
 int text_size = 2;
 
-int default_color = 1;
+// int default_color = 1;
 int corner_radius = 5;
 
 
@@ -62,7 +60,7 @@ void draw(int i, boolean selected){
                   buttons[i][3],   // int16_t y_to, 
                   corner_radius,   // int16_t corner_radius, 
                   text_size,   //int16_t text_dimension ,
-                  color_when_selected   //int16_t button_color
+                  3   //int16_t button_color
                 );
         }     else
         {
@@ -73,7 +71,7 @@ void draw(int i, boolean selected){
                   buttons[i][3],   // int16_t y_to, 
                   corner_radius,   // int16_t corner_radius, 
                   text_size,   //int16_t text_dimension ,
-                  default_color    //int16_t button_color
+                  1    //int16_t button_color
          ); }
 
  }     
@@ -89,13 +87,13 @@ int get_selected_value (void ){
 void draw_all(void){
     show_string("Scattering:", 10,145 ,2,WHITE, BLACK,1);
 
-    for ( int i = 0; i < elements ; ++i ) {
+    for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
       if ( i == selected  ){draw(i, true);} else {draw(i, false);}     
     }
 }
 
 void do_actions(int x, int y){
-   for ( int i = 0; i < elements ; ++i ) {
+   for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
       Serial.println(i);
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  
