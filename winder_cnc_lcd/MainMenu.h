@@ -34,7 +34,8 @@ class MainMenu :public Screen {
     my_scattering.do_actions(touch_x, touch_y);
     my_rpm.do_actions(touch_x, touch_y);
     if ( my_winder.do_actions(touch_x, touch_y) ) {
-      int turns_to_go = my_winder.query_completed_turns() 
+      my_winder.query_completed_turns();      
+      int turns_to_go = my_winder.completed_turns 
                               - my_turns.getValue();
       // if (turns_to_go >= 50) {
       int sent = my_winder.run(turns_to_go, 
