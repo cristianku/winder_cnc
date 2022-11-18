@@ -4,7 +4,7 @@ class MainMenu :public Screen {
   private:
     int turns_to_do_field [4] {200 ,  // x from
                             80,     // y from
-                            300,    // x to      
+                            300,    // x to
                             120};    // y to
 
 
@@ -34,23 +34,23 @@ class MainMenu :public Screen {
     my_scattering.do_actions(touch_x, touch_y);
     my_rpm.do_actions(touch_x, touch_y);
     if ( my_winder.do_actions(touch_x, touch_y) ) {
-      my_winder.query_completed_turns();      
+      my_winder.query_completed_turns();
       int turns_to_go = my_turns.getValue() - my_winder.completed_turns ;
 
       // if (turns_to_go >= 50) {
-      // Serial.println("turns to go :" + String(turns_to_go));  
+      // Serial.println("turns to go :" + String(turns_to_go));
       if ( turns_to_go >= 50){
-          my_winder.run(turns_to_go, 
+          my_winder.run(turns_to_go,
                         my_scattering.get_selected_value(),
                         my_rpm.get_selected_value());
-          my_winder.query_completed_turns();                    
+          my_winder.query_completed_turns();
           my_winder.draw_completed ( );
-      }   
+      }
       // }
     };
 
     if ( my_turns.do_actions(touch_x, touch_y) ) {
-      
+
       int numeric_pad_value = my_numpad.show();
       my_turns.setValue (numeric_pad_value);
       show();
