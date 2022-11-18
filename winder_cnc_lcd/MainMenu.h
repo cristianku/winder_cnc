@@ -34,13 +34,18 @@ class MainMenu :public Screen {
     my_scattering.do_actions(touch_x, touch_y);
     my_rpm.do_actions(touch_x, touch_y);
     if ( my_winder.do_actions(touch_x, touch_y) ) {
-      int turns_to_go = my_winder.query_completed_turns() 
-                              - my_turns.getValue();
+      my_winder.query_completed_turns();      
+      int turns_to_go = my_turns.getValue() - my_winder.completed_turns ;
+
       // if (turns_to_go >= 50) {
-      int sent = my_winder.run(my_turns.getValue(), 
-                    my_scattering.get_selected_value(),
-                    my_rpm.get_selected_value());
-      // my_winder.draw_completed ( my_winder.query_completed_turns());
+      // Serial.println("turns to go :" + String(turns_to_go));  
+      if ( turns_to_go >= 50){
+          my_winder.run(turns_to_go, 
+                        my_scattering.get_selected_value(),
+                        my_rpm.get_selected_value());
+          my_winder.query_completed_turns();                    
+          my_winder.draw_completed ( );
+      }   
       // }
     };
 
