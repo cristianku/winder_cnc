@@ -127,7 +127,7 @@ int numeric_pad [14][4] {
 
 String numeric_pad_desc[14] ={ "0", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "0", "OK"};
 
-int numeric_pad_values[14] ={ 99, 99, 1, 2, 3, 
+int numeric_pad_values[14] ={ -1, -1, 1, 2, 3, 
 4, 5, 6, 7, 8, 9, 10, 0, 20};
 
 
@@ -136,19 +136,17 @@ uint8_t which_pressed()
   // Serial.println( "*** which pressed ");
   // Serial.println( "*** touch_x " + String(touch_x));
   // Serial.println( "*** touch_y " + String(touch_y));
-  int numeric_value = 99;
-  for ( int i = 0; i < ArrayCount(numeric_pad) ; ++i ) {
+
+  for ( int i = 2; i < ArrayCount(numeric_pad) ; ++i ) {
       // Serial.println(i);
       if(numeric_pad[i][0] < touch_x && touch_x < numeric_pad[i][2] &&
         numeric_pad[i][1] < touch_y && touch_y < numeric_pad[i][3]){
           // Serial.println( "*** FOUND i " + String(i));
 
-           numeric_value = numeric_pad_values[i];
-
+          return numeric_pad_values[i];
         }
   }
   
-  return numeric_value;
 }
 
 
@@ -268,33 +266,14 @@ void do_actions(){
     int selected = -1;
     uint8_t value_selected_numpad = which_pressed();
 
-    Serial.print(" --> value_selected_numpad : ");
-    Serial.println(value_selected_numpad);
+    // Serial.print(" --> value_selected_numpad : ");
+    // Serial.println(value_selected_numpad);
 
     if (isNumPadNumber(value_selected_numpad)) { 
       updateNumericPadValue(value_selected_numpad); 
-      draw_button(String(numeric_pad_value), // uint8_t *desc,
-                  numeric_pad[1][0],   // int16_t x_from, 
-                  numeric_pad[1][1],   // int16_t y_from, 
-                  numeric_pad[1][2],   // int16_t x_to, 
-                  numeric_pad[1][3],   // int16_t y_to, 
-                  5,   // int16_t corner_radius, 
-                  2,   //int16_t text_dimension ,
-                  4    //int16_t button_color
-                   );
-
     } else if (isCancel(value_selected_numpad)){
 
       numeric_pad_value = "0";
-      draw_button(String(numeric_pad_value), // uint8_t *desc,
-                  numeric_pad[1][0],   // int16_t x_from, 
-                  numeric_pad[1][1],   // int16_t y_from, 
-                  numeric_pad[1][2],   // int16_t x_to, 
-                  numeric_pad[1][3],   // int16_t y_to, 
-                  5,   // int16_t corner_radius, 
-                  2,   //int16_t text_dimension ,
-                  4    //int16_t button_color
-                   );
 
     } else if (isOK(value_selected_numpad)){
 
@@ -302,9 +281,19 @@ void do_actions(){
 
     };
 
+    if (confirmation == false){
+      draw_button(String(numeric_pad_value), // uint8_t *desc,
+                  numeric_pad[1][0],   // int16_t x_from, 
+                  numeric_pad[1][1],   // int16_t y_from, 
+                  numeric_pad[1][2],   // int16_t x_to, 
+                  numeric_pad[1][3],   // int16_t y_to, 
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  4    //int16_t button_color
+                   );
 
-    delay(100);
-
+      delay(100);
+    }
   }; // end while confirmation
 
 }
