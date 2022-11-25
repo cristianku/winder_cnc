@@ -58,7 +58,7 @@ void draw_all(void){
 boolean do_actions(int x, int y){
    boolean found = false;
    for ( uint8_t i = 0; i < ArrayCount(buttons) ; ++i ) {
-      Serial.println(i);
+      // Serial.println(i);
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  
         ){
