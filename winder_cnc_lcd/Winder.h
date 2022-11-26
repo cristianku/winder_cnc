@@ -73,7 +73,7 @@ void draw(int i, boolean selected){
                   buttons[i][3],   // int16_t y_to, 
                   5,   // int16_t corner_radius, 
                   2,   //int16_t text_dimension ,
-                  3    //int16_t button_color                
+                  2    //int16_t button_color        2=MAGENTA, 3=YELLOW         
                   );
         }     else
         {
