@@ -20,35 +20,35 @@ int buttons [4] [5]= {
                         start_y_pos,            //y from                  1
                         480/4   -5   ,  //x to                    2
                         start_y_pos + button_height,            //y to                    3
-                        300},           // value when selected    8
+                        350},           // speed
 
                         {5 + 480/4 , 
                          start_y_pos,   
                          480/4*2 -5   ,       
                          start_y_pos + button_height,  
-                         450}, 
+                         500},     // speed
                          
                         {5 + 480/4*2,      
                         start_y_pos,   
                         480/4*3 -5   ,       
                         start_y_pos + button_height,  
-                        500}, // speed
+                        600}, // speed
                         
                         {5 + 480/4*3,      
                         start_y_pos,   
                         480/4*4 -5   ,       
                         start_y_pos + button_height,  
-                        600}, // speed
+                        700}, // speed
 
 
                       } ;
 
 String desc [4] = { 
 
-                        "300 rpm",
-                        "450 rpm",
+                        "350 rpm",
                         "500 rpm",
                         "600 rpm",
+                        "700 rpm",
 
 };
 

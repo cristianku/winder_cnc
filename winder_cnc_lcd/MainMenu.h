@@ -22,6 +22,7 @@ class MainMenu :public Screen {
     my_lcd.Fill_Screen(background);
 
     show_string("WINDER CNC", 10,10 ,2,WHITE, BLACK,1);
+    show_string("Copyright 14Fourteen Music 2022", 280,300 ,1,WHITE, BLACK,1);
 
     my_scattering.draw_all();
     my_rpm.draw_all();
@@ -35,11 +36,12 @@ class MainMenu :public Screen {
     my_rpm.do_actions(touch_x, touch_y);
     if ( my_winder.do_actions(touch_x, touch_y) ) {
       
-      // int turns_to_go = my_turns.getValue() - my_winder.query_completed_turns() ;
-      int turns_to_go = my_turns.getValue();
+      int turns_to_go = my_turns.getValue() - my_winder.query_completed_turns() ;
+      // my_winder.draw_completed(turns_to_go);
+      // int turns_to_go = my_turns.getValue();
 
       // Serial.println("turns to go :" + String(turns_to_go));
-      if ( turns_to_go >= 50){
+       if ( turns_to_go >= 50){
           my_winder.run(turns_to_go,
                         my_scattering.get_selected_value(),
                         my_rpm.get_selected_value());
@@ -47,6 +49,9 @@ class MainMenu :public Screen {
           my_winder.draw_completed (my_winder.query_completed_turns() );
       }
       // }
+      my_winder.selected = -1;
+      my_winder.draw(0, false);
+
     };
 
     if ( my_turns.do_actions(touch_x, touch_y) ) {

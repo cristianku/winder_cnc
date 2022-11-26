@@ -1,6 +1,6 @@
 class Winder : public Screen {
 
-private:
+public:
 
 uint8_t selected = -1;
 int total_turns_sent = 0;
@@ -27,41 +27,44 @@ int buttons [2] [4]= { {5,
 
 String desc [2] = { "Run Winder" , "0 completed"};
 
-void draw(void){
+// void draw(void){
 
-    for ( uint8_t i = 0; i < ArrayCount(buttons) ; ++i ) {
+//     for ( uint8_t i = 0; i < ArrayCount(buttons) ; ++i ) {
 
-      // my_lcd.Fill_Round_Rectangle(buttons[i][0], buttons[i][1], buttons[i][2],buttons[i][3], buttons[i][4]);
+//       // my_lcd.Fill_Round_Rectangle(buttons[i][0], buttons[i][1], buttons[i][2],buttons[i][3], buttons[i][4]);
     
-      // show_string(buttons_desc[i], buttons[i][0] + 20,get_y_text_pos (buttons[i][3] , buttons[i][1],buttons[i][5]) ,buttons[i][5],BLACK, BLACK,1);
-      if ( i == selected  ){
+//       // show_string(buttons_desc[i], buttons[i][0] + 20,get_y_text_pos (buttons[i][3] , buttons[i][1],buttons[i][5]) ,buttons[i][5],BLACK, BLACK,1);
+//       if ( i == selected  ){
 
-              draw_button(desc[i], // uint8_t *desc,
-                  buttons[i][0],   // int16_t x_from, 
-                  buttons[i][1],   // int16_t y_from, 
-                  buttons[i][2],   // int16_t x_to, 
-                  buttons[i][3],   // int16_t y_to, 
-                  5,   // int16_t corner_radius, 
-                  2,   //int16_t text_dimension ,
-                  3   //int16_t button_color
-                );
-      }else {
-      draw_button(desc[i], // uint8_t *desc,
-                  buttons[i][0],   // int16_t x_from, 
-                  buttons[i][1],   // int16_t y_from, 
-                  buttons[i][2],   // int16_t x_to, 
-                  buttons[i][3],   // int16_t y_to, 
-                  5,   // int16_t corner_radius, 
-                  2,   //int16_t text_dimension ,
-                  1    //int16_t button_color
-                );
-      }     
-    }
+//               draw_button(desc[i], // uint8_t *desc,
+//                   buttons[i][0],   // int16_t x_from, 
+//                   buttons[i][1],   // int16_t y_from, 
+//                   buttons[i][2],   // int16_t x_to, 
+//                   buttons[i][3],   // int16_t y_to, 
+//                   5,   // int16_t corner_radius, 
+//                   2,   //int16_t text_dimension ,
+//                   3   //int16_t button_color
+//                 );
+//       }else {
+//       draw_button(desc[i], // uint8_t *desc,
+//                   buttons[i][0],   // int16_t x_from, 
+//                   buttons[i][1],   // int16_t y_from, 
+//                   buttons[i][2],   // int16_t x_to, 
+//                   buttons[i][3],   // int16_t y_to, 
+//                   5,   // int16_t corner_radius, 
+//                   2,   //int16_t text_dimension ,
+//                   1    //int16_t button_color
+//                 );
+//       }     
+//     }
 
-}
+// }
 
 void draw(int i, boolean selected){
-       
+       if (i == 1){
+         desc[i] = String(query_completed_turns()) + " completed";
+       }
+
        if ( selected ){
               draw_button(desc[i], // uint8_t *desc,
                   buttons[i][0],   // int16_t x_from, 
@@ -141,6 +144,10 @@ int get_Turns_per_scatter_level(int scatter_level){
         case 4:
           return 900;
           break;
+        case 50:
+          return 50;
+          break;
+
       };
 
 }
@@ -149,7 +156,6 @@ boolean query_idle(){
 
   Serial.println("?");
   delay(10);
-  int completed_turns = 0;
   String grbl_out = Serial.readString();
 
   int idle = 0;
@@ -229,13 +235,20 @@ void send_gcode( float turns_x, float movement_y , int speed){
   Serial.print(" F" );
   Serial.print(speed );
   Serial.println("" );
-  delay(100);
+  delay(50);
 
   draw_completed ( query_completed_turns());
 
   total_turns_sent += turns_x;
 
 }
+
+void run_scattering_50turns (int speed){
+
+  send_gcode(25, 0.9, speed);
+  send_gcode(25, -0.9, speed);
+}
+
 
 void run_scattering_1 (int speed){
 
@@ -338,26 +351,51 @@ void  run(int turns, int scattering, int speed){
           break;
       case 2:
           run_scattering_2(speed);
+
           break;
       case 3:
           run_scattering_3(speed);
+
           break;
       case 4:
           run_scattering_4(speed);
+
           break;                    
     }
         
   }
 
+  // multiple of 100 remaining using Scattering level 1
+  int remaining = turns - total_turns_sent;
+  if ( remaining >= 50 ){
+    iterations = int(remaining / get_Turns_per_scatter_level(1));
+
+    // do scattering_1 for the remaining
+    for ( int i = 0; i < iterations ; ++i ) {
+      run_scattering_1(speed);
+          
+    }
+  } 
+
+  // multiple of 50 remaining using Scattering for 50 turns
+  remaining = turns - total_turns_sent;
+  if ( remaining >= 50 ){
+    iterations = int(remaining / get_Turns_per_scatter_level(50));
+
+    // do scattering_1 for the remaining
+    for ( int i = 0; i < iterations ; ++i ) {
+      run_scattering_50turns(speed);
+          
+    }
+  }
+
+
   while ( query_idle() == false){
     draw_completed ( query_completed_turns());
-    delay(50);
+    delay(20);
   }
   
-  draw_completed ( query_completed_turns());
-
-  selected = -1;
-  draw(0, false);
+  // draw_completed ( query_completed_turns());
 
 ;
 }

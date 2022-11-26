@@ -86,12 +86,44 @@ int get_selected_value (void ){
 
 }
 
+void show_scattering_help(int scatter_level){
+  String desc = "";
+
+  switch (scatter_level) { 
+  case 0:
+    desc ="Level 1 - most scattered   ( min. 100 turns )";   
+    break;
+  case 1:
+    desc ="Level 2 - medium scattered ( min. 200 turns )";   
+    break;
+  case 2:
+    desc ="Level 3 - least scattered  ( min. 350 turns )";
+    break;
+  case 3:
+    desc ="Level 4 - High + Low scatter (1 + 3, min. 900 turns )";
+    break;
+
+  };    
+  if ( desc > "") {
+    my_lcd.Set_Draw_color(background);
+
+    my_lcd.Fill_Round_Rectangle(150, 150, 480,160, 2);
+
+    show_string(desc, 150,150 ,1,WHITE, background,1);
+  }
+
+}
 
 void draw_all(void){
     show_string("Scattering:", 10,buttons[0][1] +15  ,2,WHITE, BLACK,1);
 
     for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
-      if ( i == selected  ){draw(i, true);} else {draw(i, false);}     
+      if ( i == selected  )
+      {
+        show_scattering_help(i);
+        draw(i, true);
+      } 
+      else {draw(i, false);}     
     }
 }
 
