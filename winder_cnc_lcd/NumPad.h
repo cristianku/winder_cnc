@@ -136,23 +136,27 @@ uint8_t which_pressed()
   // Serial.println( "*** which pressed ");
   // Serial.println( "*** touch_x " + String(touch_x));
   // Serial.println( "*** touch_y " + String(touch_y));
-
+  uint8_t return_value;
+  return_value = 99;
   for ( int i = 2; i < ArrayCount(numeric_pad) ; ++i ) {
       // Serial.println(i);
       if(numeric_pad[i][0] < touch_x && touch_x < numeric_pad[i][2] &&
         numeric_pad[i][1] < touch_y && touch_y < numeric_pad[i][3]){
           // Serial.println( "*** FOUND i " + String(i));
 
-          return numeric_pad_values[i];
+          return_value =  numeric_pad_values[i];
         }
   }
+
+  return return_value;  
   
 }
 
 
 boolean isNumPadNumber(uint8_t value_selected_numpad) {
-
+  
   if (value_selected_numpad >= 0 && value_selected_numpad <= 9) { 
+    Serial.println( String(value_selected_numpad) + "  is a pad number " );
     return true;    
   } else
   {
@@ -258,30 +262,20 @@ int show(void){
 }
 
 void do_actions(){
+  uint8_t value_selected_numpad = 99;
 
   boolean confirmation = false;
   while (confirmation == false){
     while (is_pressed() == false) {}
     convert_point();
     int selected = -1;
-    uint8_t value_selected_numpad = which_pressed();
+    value_selected_numpad = which_pressed();
 
-    // Serial.print(" --> value_selected_numpad : ");
-    // Serial.println(value_selected_numpad);
+    Serial.print(" --> value_selected_numpad : ");
+    Serial.println(value_selected_numpad);
 
     if (isNumPadNumber(value_selected_numpad)) { 
       updateNumericPadValue(value_selected_numpad); 
-    } else if (isCancel(value_selected_numpad)){
-
-      numeric_pad_value = "0";
-
-    } else if (isOK(value_selected_numpad)){
-
-      confirmation = true;
-
-    };
-
-    if (confirmation == false){
       draw_button(String(numeric_pad_value), // uint8_t *desc,
                   numeric_pad[1][0],   // int16_t x_from, 
                   numeric_pad[1][1],   // int16_t y_from, 
@@ -292,8 +286,18 @@ void do_actions(){
                   4    //int16_t button_color
                    );
 
-      delay(100);
-    }
+    } else if (isCancel(value_selected_numpad)){
+
+      numeric_pad_value = "0";
+
+    } else if (isOK(value_selected_numpad)){
+
+      confirmation = true;
+
+    };
+
+    delay(100);
+
   }; // end while confirmation
 
 }

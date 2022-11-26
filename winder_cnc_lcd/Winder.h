@@ -308,6 +308,7 @@ int  run(int turns, int scattering, int speed){
   int turns_per_iteration = get_Turns_per_scatter_level(scattering);
 
   int iterations = int(turns / turns_per_iteration);
+  
   // Serial.print("turns : "); Serial.println(turns);
   // Serial.print("turns_per_iteration : "); Serial.println(turns_per_iteration);
 
