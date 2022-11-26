@@ -2,7 +2,7 @@ class Rpm : public Screen {
 
 private:
 
-int selected = 0;
+uint8_t selected = 0;
 
 //1 grey
 //2 magenta
@@ -10,8 +10,8 @@ int selected = 0;
 //4 white
 //5 black
 
-int start_y_pos = 165;
-int button_height = 40;
+const uint8_t start_y_pos = 165;
+const uint8_t button_height = 40;
 
 
 int buttons [4] [5]= { 

@@ -16,12 +16,12 @@ int selected = 0;
 // int default_color = 1;
 
 
-int start_y_pos = 100;
-int start_x_pos = 190;
+const uint8_t start_y_pos = 100;
+const uint8_t start_x_pos = 190;
 
-uint8_t button_height = 40;
-int button_width = 50;
-uint8_t distance_between = 15;
+const uint8_t button_height = 40;
+const uint8_t button_width = 50;
+const uint8_t distance_between = 15;
 
 int buttons [4][5] = {
                         {start_x_pos,        //x from 
@@ -91,13 +91,13 @@ void show_scattering_help(int scatter_level){
 
   switch (scatter_level) { 
   case 0:
-    desc ="Level 1 - most scattered   ( min. 100 turns )";   
+    desc ="Level 1 - highest scattering ( min. 100 turns )";   
     break;
   case 1:
-    desc ="Level 2 - medium scattered ( min. 200 turns )";   
+    desc ="Level 2 - medium scattering ( min. 200 turns )";   
     break;
   case 2:
-    desc ="Level 3 - least scattered  ( min. 350 turns )";
+    desc ="Level 3 - lowest scattering  ( min. 350 turns )";
     break;
   case 3:
     desc ="Level 4 - High + Low scatter (1 + 3, min. 900 turns )";
@@ -107,9 +107,9 @@ void show_scattering_help(int scatter_level){
   if ( desc > "") {
     my_lcd.Set_Draw_color(background);
 
-    my_lcd.Fill_Round_Rectangle(150, 150, 480,160, 2);
+    my_lcd.Fill_Round_Rectangle(120, 150, 480,160, 2);
 
-    show_string(desc, 150,150 ,1,WHITE, background,1);
+    show_string(desc, 120,150 ,1,WHITE, background,1);
   }
 
 }

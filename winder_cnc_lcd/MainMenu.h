@@ -2,7 +2,7 @@
 class MainMenu :public Screen {
 
   private:
-    int turns_to_do_field [4] {200 ,  // x from
+    uint8_t turns_to_do_field [4] {200 ,  // x from
                             80,     // y from
                             300,    // x to
                             120};    // y to

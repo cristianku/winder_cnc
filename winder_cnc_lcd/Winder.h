@@ -22,7 +22,7 @@ int buttons [2] [4]= { {5,
                        {170,
                         start_y_pos,  
                         460,
-                        start_y_pos+button_height}  
+                        start_y_pos+button_height} 
 };
 
 String desc [2] = { "Run Winder" , "0 completed"};
@@ -94,7 +94,8 @@ public:
 
 void draw_completed(int completed){
        
-        draw_button(String(completed) + " completed", // uint8_t *desc,
+      //  printout_completed();
+        draw_button(String(completed) + "sent= " + String(total_turns_sent) , // uint8_t *desc,
             buttons[1][0],   // int16_t x_from, 
             buttons[1][1],   // int16_t y_from, 
             buttons[1][2],   // int16_t x_to, 
@@ -153,11 +154,17 @@ int get_Turns_per_scatter_level(int scatter_level){
 
 }
 
-boolean query_idle(){
+String send_query(){
 
   Serial.println("?");
-  delay(10);
-  String grbl_out = Serial.readString();
+  delay(300);
+  return Serial.readString();
+
+}
+
+boolean query_idle(){
+
+  String grbl_out = send_query();
 
   int idle = 0;
   idle = grbl_out.indexOf("Idle");
@@ -175,11 +182,11 @@ boolean query_idle(){
 
 
 int query_completed_turns (){
-  Serial.println("?");
-  delay(10);
+
   int completed_turns = 0;
 
-  String grbl_out = Serial.readString();
+  String grbl_out = send_query();
+
   int mpos_from = grbl_out.indexOf("MPos")  + 5;
   int mpos_to = grbl_out.indexOf(".",mpos_from);
 
@@ -228,23 +235,6 @@ int query_completed_turns (){
 }
 
 
-
-void printout_completed(){
-  Serial.println("?");
-  delay(10);
-  int completed_turns = 0;
-
-  String grbl_out = Serial.readString();
-  int mpos_from = grbl_out.indexOf("MPos")  + 5;
-  int mpos_to = grbl_out.indexOf(".",mpos_from);
-  my_lcd.Fill_Screen(background);
-  show_string(grbl_out, 10,10 ,2,WHITE, BLACK,1);
-
-
-
-}
-
-
 void send_gcode( float turns_x, float movement_y , int speed){
   Serial.print("G1 X");
   Serial.print(turns_x);
@@ -253,10 +243,10 @@ void send_gcode( float turns_x, float movement_y , int speed){
   Serial.print(" F" );
   Serial.print(speed );
   Serial.println("" );
-  delay(50);
+  delay(1000);
 
- // draw_completed ( query_completed_turns());
-  printout_completed();
+  draw_completed ( query_completed_turns());
+  // printout_completed();
 
   total_turns_sent += turns_x;
 
@@ -309,48 +299,18 @@ void run_scattering_3 (int speed){
 void run_scattering_4 (int speed){
     // # scatter level 3 - 350 turns
 
-    send_gcode(100, 0.9, speed);
-    send_gcode(100, -0.9, speed);
-
-    send_gcode(50, 0.9, speed);
-    send_gcode(50, -0.9, speed);
-
-    send_gcode(25,0.9, speed);
-    send_gcode(25,-0.9, speed);
+    run_scattering_3(speed);
 
     // # scatter level 1 - 100 turns repeated 2 times
     // # first repeat
-    send_gcode(30, 0.9, speed);
-    send_gcode(30, -0.9, speed);
-
-    send_gcode(15, 0.9, speed);
-    send_gcode(15, -0.9, speed);
-
-    send_gcode(5, 0.9, speed);
-    send_gcode(5, -0.9, speed);
+    run_scattering_1(speed);
 
     // # second repeat
-    send_gcode(30, 0.9, speed);
-    send_gcode(30, -0.9, speed);
-
-    send_gcode(15, 0.9, speed);
-    send_gcode(15, -0.9, speed);
-
-    send_gcode(5, 0.9, speed);
-    send_gcode(5, -0.9, speed);
+    run_scattering_1(speed);
 
     // #scatter level 3 - 350 turns
 
-    send_gcode(100, 0.9, speed);
-    send_gcode(100, -0.9, speed);
-
-    send_gcode(50, 0.9, speed);
-    send_gcode(50, -0.9, speed);
-
-    send_gcode(25, 0.9 , speed);
-    send_gcode(25, -0.9, speed);
-
-
+    run_scattering_3(speed);
 
 }
 
@@ -387,6 +347,9 @@ void  run(int turns, int scattering, int speed){
   // multiple of 100 remaining using Scattering level 1
   int remaining = turns - total_turns_sent;
   if ( remaining >= 50 ){
+    my_lcd.Fill_Screen(background);
+    show_string("RUNNING PATCH 1", 10,10 ,2,WHITE, BLACK,1);
+
     iterations = int(remaining / get_Turns_per_scatter_level(1));
 
     // do scattering_1 for the remaining
@@ -399,6 +362,9 @@ void  run(int turns, int scattering, int speed){
   // multiple of 50 remaining using Scattering for 50 turns
   remaining = turns - total_turns_sent;
   if ( remaining >= 50 ){
+    my_lcd.Fill_Screen(background);
+    show_string("RUNNING PATCH 2", 10,10 ,2,WHITE, BLACK,1);
+
     iterations = int(remaining / get_Turns_per_scatter_level(50));
 
     // do scattering_1 for the remaining
@@ -410,14 +376,14 @@ void  run(int turns, int scattering, int speed){
 
 
   while ( query_idle() == false){
-    printout_completed();
+    // printout_completed();
 
-    // draw_completed ( query_completed_turns());
+    draw_completed ( query_completed_turns());
     delay(20);
   }
-  printout_completed();
+  // printout_completed();
 
-  // draw_completed ( query_completed_turns());
+  draw_completed ( query_completed_turns());
 
 ;
 }

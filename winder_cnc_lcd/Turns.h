@@ -12,8 +12,8 @@ int value = 0;
 
 int start_x_pos = 190;
 
-uint8_t button_height = 40;
-uint8_t button_width = 100;
+int button_height = 40;
+int button_width = 100;
 
 
 int buttons [1] [4]= { {  start_x_pos ,  // x from

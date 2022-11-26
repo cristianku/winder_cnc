@@ -5,13 +5,14 @@ public:
 int touch_x = 0;
 int touch_y = 0;
 
- int numeric_pad_width = 480/7;
- int numeric_pad_rect_y_from = 10;
+const int numeric_pad_width = 480/7;
+const int numeric_pad_rect_y_from = 10;
 
- int numeric_pad_rect_x_from = 120;
+const int numeric_pad_rect_x_from = 120;
 
- int numeric_pad_rect_y_to = 380;
- int numeric_pad_rect_x_to = 380;
+const int numeric_pad_rect_y_to = 380;
+const int numeric_pad_rect_x_to = 380;
+
 String numeric_pad_value = "0";
 
 
@@ -21,7 +22,7 @@ int numeric_pad [14][4] {
    numeric_pad_rect_x_from ,
    numeric_pad_rect_y_from,
    numeric_pad_rect_x_to,
-   numeric_pad_rect_y_to
+   380
 
 },
 // number rectangle
