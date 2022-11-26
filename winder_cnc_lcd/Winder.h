@@ -157,7 +157,7 @@ int get_Turns_per_scatter_level(int scatter_level){
 String send_query(){
 
   Serial.println("?");
-  delay(300);
+  delay(10);
   return Serial.readString();
 
 }
@@ -243,7 +243,7 @@ void send_gcode( float turns_x, float movement_y , int speed){
   Serial.print(" F" );
   Serial.print(speed );
   Serial.println("" );
-  delay(1000);
+  // delay(50);
 
   draw_completed ( query_completed_turns());
   // printout_completed();
@@ -374,12 +374,14 @@ void  run(int turns, int scattering, int speed){
     }
   }
 
+  // my_lcd.Fill_Screen(background);
+  // show_string("IDLING", 10,10 ,2,WHITE, BLACK,1);
 
   while ( query_idle() == false){
     // printout_completed();
 
     draw_completed ( query_completed_turns());
-    delay(20);
+    delay(500);
   }
   // printout_completed();
 

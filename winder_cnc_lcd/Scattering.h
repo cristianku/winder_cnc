@@ -91,25 +91,25 @@ void show_scattering_help(int scatter_level){
 
   switch (scatter_level) { 
   case 0:
-    desc ="Level 1 - highest scattering ( min. 100 turns )";   
+    desc ="Level 1 - highest scattering (min. 100 turns)";   
     break;
   case 1:
-    desc ="Level 2 - medium scattering ( min. 200 turns )";   
+    desc ="Level 2 - medium scattering (min. 200 turns)";   
     break;
   case 2:
-    desc ="Level 3 - lowest scattering  ( min. 350 turns )";
+    desc ="Level 3 - lowest scattering  (min. 350 turns)";
     break;
   case 3:
-    desc ="Level 4 - High + Low scatter (1 + 3, min. 900 turns )";
+    desc ="Level 4 - High + Low scatter (min. 900 turns)";
     break;
 
   };    
   if ( desc > "") {
     my_lcd.Set_Draw_color(background);
 
-    my_lcd.Fill_Round_Rectangle(120, 150, 480,160, 2);
+    my_lcd.Fill_Round_Rectangle(200, 150, 480,160, 2);
 
-    show_string(desc, 120,150 ,1,WHITE, background,1);
+    show_string(desc, 200,150 ,1,WHITE, background,1);
   }
 
 }
