@@ -4,6 +4,8 @@ public:
 
 uint8_t selected = -1;
 int total_turns_sent = 0;
+int total_turns_done_grbl = 0;
+
 
 //1 grey
 //2 magenta
@@ -157,7 +159,7 @@ int get_Turns_per_scatter_level(int scatter_level){
 String send_query(){
 
   Serial.println("?");
-  delay(10);
+  delay(200);
   return Serial.readString();
 
 }
@@ -208,6 +210,7 @@ int query_completed_turns (){
 
   if (grbl_out.substring(mpos_from, mpos_to) != "" ){
     completed_turns = grbl_out.substring(mpos_from, mpos_to).toInt()   ;
+    total_turns_done_grbl = completed_turns;
   }  
 
 
@@ -236,16 +239,20 @@ int query_completed_turns (){
 
 
 void send_gcode( float turns_x, float movement_y , int speed){
-  Serial.print("G1 X");
-  Serial.print(turns_x);
-  Serial.print(" Y");
-  Serial.print(movement_y);
-  Serial.print(" F" );
-  Serial.print(speed );
-  Serial.println("" );
-  // delay(50);
 
-  draw_completed ( query_completed_turns());
+  if ( total_turns_sent > total_turns_done_grbl +200){
+    delay(200);
+  }
+  Serial.println("G1 X"+String(turns_x) + " Y"+ String(movement_y)+ " F"+ String(speed));
+  // Serial.print(turns_x);
+  // Serial.print(" Y");
+  // Serial.print(movement_y);
+  // Serial.print(" F" );
+  // Serial.println(speed );
+  // Serial.println("" );
+  delay(100);
+
+  // draw_completed ( query_completed_turns());
   // printout_completed();
 
   total_turns_sent += turns_x;
@@ -270,6 +277,9 @@ void run_scattering_1 (int speed){
   send_gcode(5, 0.9,speed);
   send_gcode(5, -0.9,speed);
 
+  draw_completed ( query_completed_turns());
+
+
 }
 
 void run_scattering_2 (int speed){
@@ -281,6 +291,9 @@ void run_scattering_2 (int speed){
 
   send_gcode(20, 0.9,speed);
   send_gcode(20, -0.9,speed);
+
+  draw_completed ( query_completed_turns());
+
 }
 
 void run_scattering_3 (int speed){
@@ -292,6 +305,8 @@ void run_scattering_3 (int speed){
 
   send_gcode(25, 0.9, speed);
   send_gcode(25, -0.9, speed);
+
+  draw_completed ( query_completed_turns());
 
 
 }
@@ -311,6 +326,8 @@ void run_scattering_4 (int speed){
     // #scatter level 3 - 350 turns
 
     run_scattering_3(speed);
+
+    draw_completed ( query_completed_turns());
 
 }
 
@@ -374,8 +391,8 @@ void  run(int turns, int scattering, int speed){
     }
   }
 
-  // my_lcd.Fill_Screen(background);
-  // show_string("IDLING", 10,10 ,2,WHITE, BLACK,1);
+  my_lcd.Fill_Screen(background);
+  show_string("IDLING", 10,10 ,2,WHITE, BLACK,1);
 
   while ( query_idle() == false){
     // printout_completed();
@@ -385,6 +402,8 @@ void  run(int turns, int scattering, int speed){
   }
   // printout_completed();
 
+  // draw_completed ( query_completed_turns());
+  while (Serial.readString() > "" ){};
   draw_completed ( query_completed_turns());
 
 ;
