@@ -145,6 +145,28 @@ int get_Turns_per_scatter_level(int scatter_level){
 
 }
 
+boolean query_idle(){
+
+  Serial.println("?");
+  delay(10);
+  int completed_turns = 0;
+  String grbl_out = Serial.readString();
+
+  int idle = 0;
+  idle = grbl_out.indexOf("Idle");
+  // Serial.println("grbl_out" + grbl_out + "idle = " + String(idle)); 
+  if ( idle == -1  ){
+    return false;
+    // show_string("non trovato" + grbl_out, 1 + 20,10,2,WHITE, BLACK,1);  
+  } else
+  {
+  // show_string("trovato "+ grbl_out, 1 + 20,10,2,WHITE, BLACK,1);
+    return true;
+  }
+
+}
+
+
 int query_completed_turns (){
   Serial.println("?");
   delay(10);
@@ -301,18 +323,13 @@ void run_scattering_4 (int speed){
 }
 
 
-int  run(int turns, int scattering, int speed){
+void  run(int turns, int scattering, int speed){
   total_turns_sent = 0;
 
-  // Serial.print ("****** RUN !!!!!");
   int turns_per_iteration = get_Turns_per_scatter_level(scattering);
 
   int iterations = int(turns / turns_per_iteration);
-  
-  // Serial.print("turns : "); Serial.println(turns);
-  // Serial.print("turns_per_iteration : "); Serial.println(turns_per_iteration);
 
-  // Serial.print("iterations : "); Serial.println(iterations);
   for ( int i = 0; i < iterations ; ++i ) {
 
     switch (scattering){
@@ -332,12 +349,17 @@ int  run(int turns, int scattering, int speed){
         
   }
 
+  while ( query_idle() == false){
+    draw_completed ( query_completed_turns());
+    delay(50);
+  }
+  
+  draw_completed ( query_completed_turns());
+
   selected = -1;
   draw(0, false);
-  draw_completed ( query_completed_turns());
-  delay(100);
 
-  return total_turns_sent;
+;
 }
 
 

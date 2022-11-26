@@ -97,7 +97,7 @@ void draw_all(void){
 
 void do_actions(int x, int y){
    for ( int i = 0; i < ArrayCount(buttons)  ; ++i ) {
-      // Serial.println(i);
+
       if(buttons[i][0] < x && x < buttons[i][2] &&
         buttons[i][1] < y && y < buttons[i][3]  
         ){

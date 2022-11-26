@@ -133,16 +133,12 @@ int numeric_pad_values[14] ={ -1, -1, 1, 2, 3,
 
 uint8_t which_pressed()
 {
-  // Serial.println( "*** which pressed ");
-  // Serial.println( "*** touch_x " + String(touch_x));
-  // Serial.println( "*** touch_y " + String(touch_y));
   uint8_t return_value;
   return_value = 99;
   for ( int i = 2; i < ArrayCount(numeric_pad) ; ++i ) {
-      // Serial.println(i);
+
       if(numeric_pad[i][0] < touch_x && touch_x < numeric_pad[i][2] &&
         numeric_pad[i][1] < touch_y && touch_y < numeric_pad[i][3]){
-          // Serial.println( "*** FOUND i " + String(i));
 
           return_value =  numeric_pad_values[i];
         }
@@ -156,7 +152,6 @@ uint8_t which_pressed()
 boolean isNumPadNumber(uint8_t value_selected_numpad) {
   
   if (value_selected_numpad >= 0 && value_selected_numpad <= 9) { 
-    Serial.println( String(value_selected_numpad) + "  is a pad number " );
     return true;    
   } else
   {
@@ -192,12 +187,6 @@ boolean isOK(uint8_t value_selected_numpad) {
 }
 
 void updateNumericPadValue(uint8_t value_selected_numpad) {
-  // Serial.println("** entering updateNumericPadValue");
-  // Serial.print("** numeric_pad_value : "); 
-  // Serial.println(numeric_pad_value);
-
-  // Serial.print("** value_selected_numpad : "); 
-  // Serial.println(value_selected_numpad);
 
   if (numeric_pad_value == "0") {
     numeric_pad_value = String(value_selected_numpad);      
@@ -213,11 +202,10 @@ void updateNumericPadValue(uint8_t value_selected_numpad) {
 
 
 int show(void){
-  // Serial.println("**********numpad show ");
   numeric_pad_value = "0";
   for ( int i = 0; i < ArrayCount(numeric_pad) ; ++i ) {
 
-      // Serial.println(i);
+
       uint8_t color = 1;
       String value_to_show = "y";
       switch (i) 
@@ -235,12 +223,6 @@ int show(void){
           break;
 
       };      
-
-      // Serial.print ("Draw coordinates element i = " ); Serial.println(i);
-      // Serial.print ("x from : ");Serial.println(numeric_pad[i][0]);
-      // Serial.print ("y from : ");Serial.println(numeric_pad[i][1]);
-      // Serial.print ("x to   : ");Serial.println(numeric_pad[i][2]);
-      // Serial.print ("y to.  : ");Serial.println(numeric_pad[i][3]);
 
       draw_button(value_to_show, // uint8_t *desc,
                 numeric_pad[i][0],   // int16_t x_from, 
@@ -261,6 +243,18 @@ int show(void){
 
 }
 
+void draw_numeric_pad_field(){
+      draw_button(String(numeric_pad_value), // uint8_t *desc,
+                  numeric_pad[1][0],   // int16_t x_from, 
+                  numeric_pad[1][1],   // int16_t y_from, 
+                  numeric_pad[1][2],   // int16_t x_to, 
+                  numeric_pad[1][3],   // int16_t y_to, 
+                  5,   // int16_t corner_radius, 
+                  2,   //int16_t text_dimension ,
+                  4    //int16_t button_color
+                   );
+}
+
 void do_actions(){
   uint8_t value_selected_numpad = 99;
 
@@ -271,24 +265,15 @@ void do_actions(){
     int selected = -1;
     value_selected_numpad = which_pressed();
 
-    Serial.print(" --> value_selected_numpad : ");
-    Serial.println(value_selected_numpad);
-
     if (isNumPadNumber(value_selected_numpad)) { 
       updateNumericPadValue(value_selected_numpad); 
-      draw_button(String(numeric_pad_value), // uint8_t *desc,
-                  numeric_pad[1][0],   // int16_t x_from, 
-                  numeric_pad[1][1],   // int16_t y_from, 
-                  numeric_pad[1][2],   // int16_t x_to, 
-                  numeric_pad[1][3],   // int16_t y_to, 
-                  5,   // int16_t corner_radius, 
-                  2,   //int16_t text_dimension ,
-                  4    //int16_t button_color
-                   );
+      draw_numeric_pad_field();
+
 
     } else if (isCancel(value_selected_numpad)){
 
       numeric_pad_value = "0";
+      draw_numeric_pad_field();
 
     } else if (isOK(value_selected_numpad)){
 
