@@ -241,7 +241,7 @@ int query_completed_turns (){
 void send_gcode( float turns_x, float movement_y , int speed){
 
   if ( total_turns_sent > total_turns_done_grbl +200){
-    delay(200);
+    delay(100);
   }
   Serial.println("G1 X"+String(turns_x) + " Y"+ String(movement_y)+ " F"+ String(speed));
   // Serial.print(turns_x);
@@ -252,6 +252,7 @@ void send_gcode( float turns_x, float movement_y , int speed){
   // Serial.println("" );
   delay(100);
 
+  String risposta = Serial.readString();
   // draw_completed ( query_completed_turns());
   // printout_completed();
 
@@ -404,6 +405,11 @@ void  run(int turns, int scattering, int speed){
 
   // draw_completed ( query_completed_turns());
   while (Serial.readString() > "" ){};
+  draw_completed ( query_completed_turns());
+  draw_completed ( query_completed_turns());
+  draw_completed ( query_completed_turns());
+  draw_completed ( query_completed_turns());
+  draw_completed ( query_completed_turns());
   draw_completed ( query_completed_turns());
 
 ;
