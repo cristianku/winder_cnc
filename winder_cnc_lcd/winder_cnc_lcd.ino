@@ -89,7 +89,7 @@ void loop() {
 
   my_mainmenu.do_actions();
 
-  delay(20);
+  delay(10);
 
 
 }

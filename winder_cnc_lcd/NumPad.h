@@ -281,7 +281,7 @@ void do_actions(){
 
     };
 
-    delay(100);
+    delay(50);
 
   }; // end while confirmation
 
