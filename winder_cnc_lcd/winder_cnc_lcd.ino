@@ -70,7 +70,7 @@ void setup() {
   delay(2000);   //# Wait for grbl to initialize
   // Serial.flush();  //# Flush startup text in serial input
   Serial.println("G91")
-  ;
+  // dio;
 
   my_lcd.Init_LCD();
   my_lcd.Set_Text_Size(2);
