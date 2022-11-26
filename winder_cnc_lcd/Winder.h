@@ -415,7 +415,8 @@ void  run(int turns, int scattering, int speed){
     // draw_completed ( query_completed_turns());
     delay(20);
   }
-  
+  printout_completed();
+
   // draw_completed ( query_completed_turns());
 
 ;
