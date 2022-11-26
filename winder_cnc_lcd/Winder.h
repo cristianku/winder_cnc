@@ -104,6 +104,7 @@ void draw_completed(int completed){
             1    //int16_t button_color                
             );
 }
+
 void draw_all(void){
 
     for ( int i = 0; i < ArrayCount(buttons) ; ++i ) {
@@ -182,6 +183,7 @@ int query_completed_turns (){
   int mpos_from = grbl_out.indexOf("MPos")  + 5;
   int mpos_to = grbl_out.indexOf(".",mpos_from);
 
+
   // int idle = 0;
   // idle = grbl_out.indexOf("Idle");
   
@@ -227,6 +229,22 @@ int query_completed_turns (){
 
 
 
+void printout_completed(){
+  Serial.println("?");
+  delay(10);
+  int completed_turns = 0;
+
+  String grbl_out = Serial.readString();
+  int mpos_from = grbl_out.indexOf("MPos")  + 5;
+  int mpos_to = grbl_out.indexOf(".",mpos_from);
+  my_lcd.Fill_Screen(background);
+  show_string(grbl_out, 10,10 ,2,WHITE, BLACK,1);
+
+
+
+}
+
+
 void send_gcode( float turns_x, float movement_y , int speed){
   Serial.print("G1 X");
   Serial.print(turns_x);
@@ -237,7 +255,8 @@ void send_gcode( float turns_x, float movement_y , int speed){
   Serial.println("" );
   delay(50);
 
-  draw_completed ( query_completed_turns());
+ // draw_completed ( query_completed_turns());
+  printout_completed();
 
   total_turns_sent += turns_x;
 
@@ -391,7 +410,9 @@ void  run(int turns, int scattering, int speed){
 
 
   while ( query_idle() == false){
-    draw_completed ( query_completed_turns());
+    printout_completed();
+
+    // draw_completed ( query_completed_turns());
     delay(20);
   }
   
