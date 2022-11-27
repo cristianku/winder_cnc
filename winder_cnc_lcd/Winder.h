@@ -4,6 +4,8 @@ public:
 
 uint8_t selected = -1;
 int total_turns_sent = 0;
+int total_turns_sent_from_start = 0;
+
 int total_turns_done_grbl = 0;
 
 
@@ -97,15 +99,17 @@ public:
 void draw_completed(int completed){
        
       //  printout_completed();
-        draw_button(String(completed) + "sent= " + String(total_turns_sent) , // uint8_t *desc,
-            buttons[1][0],   // int16_t x_from, 
-            buttons[1][1],   // int16_t y_from, 
-            buttons[1][2],   // int16_t x_to, 
-            buttons[1][3],   // int16_t y_to, 
-            5,   // int16_t corner_radius, 
-            2,   //int16_t text_dimension ,
-            1    //int16_t button_color                
-            );
+        // draw_button(String(completed) + "sent= " + String(total_turns_sent) , // uint8_t *desc,
+  draw_button(String(completed) + " completed", // uint8_t *desc,
+
+      buttons[1][0],   // int16_t x_from, 
+      buttons[1][1],   // int16_t y_from, 
+      buttons[1][2],   // int16_t x_to, 
+      buttons[1][3],   // int16_t y_to, 
+      5,   // int16_t corner_radius, 
+      2,   //int16_t text_dimension ,
+      1    //int16_t button_color                
+      );
 }
 
 void draw_all(void){
@@ -159,7 +163,7 @@ int get_Turns_per_scatter_level(int scatter_level){
 String send_query(){
 
   Serial.println("?");
-  delay(200);
+  delay(50);
   return Serial.readString();
 
 }
@@ -241,9 +245,9 @@ int query_completed_turns (){
 void send_gcode( float turns_x, float movement_y , int speed){
 
   boolean gcode_delayed = false;
-  while ( (total_turns_sent - total_turns_done_grbl)  > 200){
-    gcode_delayed= true;
+  while ( (total_turns_sent_from_start - total_turns_done_grbl)  > 400){
     draw_completed ( query_completed_turns());
+    gcode_delayed= true;
     show_info_message("DELAYING GCODE...");
     delay(200);
   }
@@ -263,6 +267,7 @@ void send_gcode( float turns_x, float movement_y , int speed){
   // printout_completed();
 
   total_turns_sent += turns_x;
+  total_turns_sent_from_start += turns_x;
 
 }
 

@@ -32,13 +32,13 @@ int buttons [4] [5]= {
                         start_y_pos,   
                         480/4*3 -5   ,       
                         start_y_pos + button_height,  
-                        550}, // speed
+                        650}, // speed
                         
                         {5 + 480/4*3,      
                         start_y_pos,   
                         480/4*4 -5   ,       
                         start_y_pos + button_height,  
-                        650}, // speed
+                        700}, // speed
 
 
                       } ;
@@ -47,8 +47,8 @@ String desc [4] = {
 
                         "350 rpm",
                         "500 rpm",
-                        "550 rpm",
-                        "650 rpm",
+                        "600 rpm",
+                        "700 rpm",
 
 };
 
