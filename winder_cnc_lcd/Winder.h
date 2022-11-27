@@ -240,7 +240,9 @@ int query_completed_turns (){
 
 void send_gcode( float turns_x, float movement_y , int speed){
 
-  if ( total_turns_sent > total_turns_done_grbl +200){
+  while ( (total_turns_sent - total_turns_done_grbl)  > 200){
+    draw_completed ( query_completed_turns());
+    show_info_message("WAITING...");
     delay(100);
   }
   Serial.println("G1 X"+String(turns_x) + " Y"+ String(movement_y)+ " F"+ String(speed));
@@ -339,7 +341,7 @@ void  run(int turns, int scattering, int speed){
   int turns_per_iteration = get_Turns_per_scatter_level(scattering);
 
   int iterations = int(turns / turns_per_iteration);
-
+  show_info_message("RUNNING...");
   for ( int i = 0; i < iterations ; ++i ) {
 
     switch (scattering){
@@ -366,7 +368,7 @@ void  run(int turns, int scattering, int speed){
   int remaining = turns - total_turns_sent;
   if ( remaining >= 50 ){
     my_lcd.Fill_Screen(background);
-    show_string("RUNNING PATCH 1", 10,10 ,2,WHITE, BLACK,1);
+    show_info_message("RUNNING PATCH 1");
 
     iterations = int(remaining / get_Turns_per_scatter_level(1));
 
@@ -381,7 +383,7 @@ void  run(int turns, int scattering, int speed){
   remaining = turns - total_turns_sent;
   if ( remaining >= 50 ){
     my_lcd.Fill_Screen(background);
-    show_string("RUNNING PATCH 2", 10,10 ,2,WHITE, BLACK,1);
+    show_info_message("RUNNING PATCH 2");
 
     iterations = int(remaining / get_Turns_per_scatter_level(50));
 
@@ -393,7 +395,7 @@ void  run(int turns, int scattering, int speed){
   }
 
   my_lcd.Fill_Screen(background);
-  show_string("IDLING", 10,10 ,2,WHITE, BLACK,1);
+    show_info_message("IDLE");
 
   while ( query_idle() == false){
     // printout_completed();
@@ -411,6 +413,7 @@ void  run(int turns, int scattering, int speed){
   draw_completed ( query_completed_turns());
   draw_completed ( query_completed_turns());
   draw_completed ( query_completed_turns());
+  show_info_message("COMPLETED...");
 
 ;
 }
