@@ -74,17 +74,17 @@ void convert_point(void)
 
   void show_info_message(String str)
   {
-      // my_lcd.Set_Draw_color(background);
-      my_lcd.Set_Draw_color(YELLOW);
+      my_lcd.Set_Draw_color(background);
+      // my_lcd.Set_Draw_color(YELLOW);
 
-      my_lcd.Fill_Round_Rectangle(280, 300, 480,310, 2);
+      my_lcd.Fill_Round_Rectangle(10, 285, 250,305, 2);
       delay(100);
 
       my_lcd.Set_Text_Mode(1);
       my_lcd.Set_Text_Size(2);
       my_lcd.Set_Text_colour(WHITE);
       my_lcd.Set_Text_Back_colour(BLACK);
-      my_lcd.Print_String(str,280,300);
+      my_lcd.Print_String(str,10,285);
   }
 
   void draw_button(String desc,

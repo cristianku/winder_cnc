@@ -240,11 +240,15 @@ int query_completed_turns (){
 
 void send_gcode( float turns_x, float movement_y , int speed){
 
+  boolean gcode_delayed = false;
   while ( (total_turns_sent - total_turns_done_grbl)  > 200){
+    gcode_delayed= true;
     draw_completed ( query_completed_turns());
-    show_info_message("WAITING...");
-    delay(100);
+    show_info_message("DELAYING GCODE...");
+    delay(200);
   }
+  if (gcode_delayed){ show_info_message("RUNNING...");  }
+
   Serial.println("G1 X"+String(turns_x) + " Y"+ String(movement_y)+ " F"+ String(speed));
   // Serial.print(turns_x);
   // Serial.print(" Y");
@@ -252,7 +256,7 @@ void send_gcode( float turns_x, float movement_y , int speed){
   // Serial.print(" F" );
   // Serial.println(speed );
   // Serial.println("" );
-  delay(100);
+  delay(10);
 
   String risposta = Serial.readString();
   // draw_completed ( query_completed_turns());
@@ -367,7 +371,7 @@ void  run(int turns, int scattering, int speed){
   // multiple of 100 remaining using Scattering level 1
   int remaining = turns - total_turns_sent;
   if ( remaining >= 50 ){
-    my_lcd.Fill_Screen(background);
+    // my_lcd.Fill_Screen(background);
     show_info_message("RUNNING PATCH 1");
 
     iterations = int(remaining / get_Turns_per_scatter_level(1));
@@ -382,7 +386,7 @@ void  run(int turns, int scattering, int speed){
   // multiple of 50 remaining using Scattering for 50 turns
   remaining = turns - total_turns_sent;
   if ( remaining >= 50 ){
-    my_lcd.Fill_Screen(background);
+    // my_lcd.Fill_Screen(background);
     show_info_message("RUNNING PATCH 2");
 
     iterations = int(remaining / get_Turns_per_scatter_level(50));
@@ -394,8 +398,8 @@ void  run(int turns, int scattering, int speed){
     }
   }
 
-  my_lcd.Fill_Screen(background);
-    show_info_message("IDLE");
+  // my_lcd.Fill_Screen(background);
+  show_info_message("IDLE");
 
   while ( query_idle() == false){
     // printout_completed();
@@ -407,11 +411,6 @@ void  run(int turns, int scattering, int speed){
 
   // draw_completed ( query_completed_turns());
   while (Serial.readString() > "" ){};
-  draw_completed ( query_completed_turns());
-  draw_completed ( query_completed_turns());
-  draw_completed ( query_completed_turns());
-  draw_completed ( query_completed_turns());
-  draw_completed ( query_completed_turns());
   draw_completed ( query_completed_turns());
   show_info_message("COMPLETED...");
 
